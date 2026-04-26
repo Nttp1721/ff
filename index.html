@@ -473,36 +473,237 @@ h1 {
   position: fixed;
   left: -9999px;
   top: 0;
-  width: 820px;
-  background: #09090b;
+  width: 860px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(245,200,66,0.14), transparent 38%),
+    radial-gradient(circle at 100% 100%, rgba(255,124,32,0.15), transparent 42%),
+    linear-gradient(145deg, #07080d 0%, #0c0f17 40%, #090b12 100%);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 24px;
   font-family: 'Nunito', sans-serif;
-  padding: 40px 44px;
+  color: #eef2ff;
+  overflow: hidden;
+  padding: 34px 36px 30px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.45);
 }
 
-.ec-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid var(--orange); padding-bottom: 18px; margin-bottom: 28px; }
-.ec-logo { font-size: 12px; letter-spacing: 5px; color: var(--orange); text-transform: uppercase; margin-bottom: 6px; font-weight: 800; }
-.ec-title { font-family: 'Oswald', sans-serif; font-size: 48px; color: #fff; letter-spacing: 3px; line-height: 1; }
-.ec-team-label { font-size: 11px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 4px; text-align: right; }
-.ec-team { font-family: 'Oswald', sans-serif; font-size: 40px; color: var(--gold); letter-spacing: 4px; text-align: right; }
-.ec-games { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
-.ec-game { flex: 1 1 calc(20% - 10px); background: rgba(26,19,8,0.8); border-left: 3px solid #3d2e0e; padding: 10px 14px; min-width: 110px; }
-.ec-game.booyah { border-left-color: var(--gold); background: rgba(245,200,66,0.06); }
-.ec-game-num { font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
-.ec-game-top { font-family: 'Oswald', sans-serif; font-size: 22px; color: #fff; }
-.ec-game-top.bt { color: var(--gold); }
-.ec-game-elims { font-size: 13px; color: #888; font-weight: 700; }
-.ec-game-score { font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--orange); text-align: right; margin-top: 2px; }
-.ec-summary-box { background: #110d07; border: 1px solid #3d2e0e; display: flex; align-items: stretch; }
-.ec-stats-wrapper { flex: 1; display: grid; grid-template-columns: repeat(4,1fr); border-right: 1px solid #3d2e0e; }
-.ec-stat { padding: 18px; text-align: center; border-right: 1px solid #2a2010; }
+#exportCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(transparent 97%, rgba(255,255,255,0.03) 100%),
+    linear-gradient(90deg, transparent 97%, rgba(255,255,255,0.03) 100%);
+  background-size: 34px 34px;
+  opacity: .18;
+  pointer-events: none;
+}
+
+.ec-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.ec-logo {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #f3c86f;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  font-weight: 800;
+}
+.ec-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 50px;
+  color: #fff;
+  letter-spacing: 2px;
+  line-height: 0.95;
+  text-transform: uppercase;
+  text-shadow: 0 8px 22px rgba(0,0,0,0.35);
+}
+.ec-team-wrap {
+  text-align: right;
+  background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 14px;
+  padding: 10px 16px 12px;
+  min-width: 240px;
+}
+.ec-team-label {
+  font-size: 10px;
+  color: #b9c0d4;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.ec-team {
+  font-family: 'Oswald', sans-serif;
+  font-size: 34px;
+  color: #f9d57c;
+  letter-spacing: 3px;
+  line-height: 1.08;
+  text-transform: uppercase;
+}
+
+.ec-meta {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.ec-pill {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #d2d8e9;
+  text-transform: uppercase;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.13);
+  background: rgba(255,255,255,0.04);
+  padding: 6px 12px;
+}
+
+.ec-games {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.ec-game {
+  background: linear-gradient(150deg, rgba(18,22,34,0.85), rgba(13,16,25,0.9));
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 10px 11px;
+  min-height: 108px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.ec-game.booyah {
+  border-color: rgba(245,200,66,0.52);
+  background: linear-gradient(150deg, rgba(56,44,20,0.55), rgba(23,21,16,0.92));
+}
+.ec-game-num {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #95a0b9;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.ec-game-top {
+  font-family: 'Oswald', sans-serif;
+  font-size: 24px;
+  color: #f7f9ff;
+  line-height: 1;
+}
+.ec-game-top.bt { color: #f8cf66; }
+.ec-game-elims {
+  font-size: 12px;
+  color: #a8b1c8;
+  font-weight: 700;
+}
+.ec-game-score {
+  font-family: 'Oswald', sans-serif;
+  font-size: 26px;
+  color: #ffa958;
+  text-align: right;
+  line-height: 1;
+  margin-top: 4px;
+}
+
+.ec-summary-box {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 16px;
+  display: flex;
+  align-items: stretch;
+}
+.ec-stats-wrapper {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-right: 1px solid rgba(255,255,255,0.12);
+}
+.ec-stat {
+  padding: 16px 12px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
 .ec-stat:last-child { border-right: none; }
-.ec-stat-val { font-family: 'Oswald', sans-serif; font-size: 34px; color: #fff; line-height: 1; }
-.ec-stat-lbl { font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-top: 4px; }
-.ec-total { padding: 18px 36px; text-align: right; display: flex; flex-direction: column; justify-content: center; background: radial-gradient(circle at right, rgba(232,124,30,0.15), transparent); }
-.ec-total-label { font-size: 12px; font-weight: 800; letter-spacing: 4px; color: var(--orange); text-transform: uppercase; }
-.ec-total-val { font-family: 'Oswald', sans-serif; font-size: 68px; line-height: 1; background: linear-gradient(135deg, var(--gold), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.ec-footer { display: flex; justify-content: space-between; margin-top: 22px; font-size: 10px; letter-spacing: 3px; color: #4a3a1a; text-transform: uppercase; font-weight: 700; }
-.ec-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(-10deg); font-family: 'Oswald', sans-serif; font-size: 160px; color: rgba(255,255,255,0.018); white-space: nowrap; z-index: 0; pointer-events: none; letter-spacing: 10px; }
+.ec-stat-val {
+  font-family: 'Oswald', sans-serif;
+  font-size: 36px;
+  color: #f8faff;
+  line-height: 1;
+}
+.ec-stat-lbl {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #9ca8c2;
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+.ec-total {
+  padding: 14px 24px;
+  min-width: 220px;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: radial-gradient(circle at right, rgba(255,168,80,0.2), transparent 70%);
+}
+.ec-total-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #f9c66e;
+  text-transform: uppercase;
+}
+.ec-total-val {
+  font-family: 'Oswald', sans-serif;
+  font-size: 68px;
+  line-height: .95;
+  background: linear-gradient(135deg, #ffe29c, #ff9a3c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.ec-footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 14px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #8f9bb8;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.ec-watermark {
+  position: absolute;
+  top: 50%;
+  left: 52%;
+  transform: translate(-50%,-50%) rotate(-12deg);
+  font-family: 'Oswald', sans-serif;
+  font-size: 166px;
+  color: rgba(255,255,255,0.02);
+  white-space: nowrap;
+  z-index: 0;
+  pointer-events: none;
+  letter-spacing: 9px;
+}
+
 </style>
 </head>
 <body>
@@ -510,7 +711,7 @@ h1 {
 <header>
   <div class="header-badge">🔫 Free Fire · Esports</div>
   <h1>Tính Điểm Giải</h1>
-  <div class="header-sub">1 Elims = 1 điểm &nbsp;·&nbsp; Top 1 = 12 điểm</div>
+  <div class="header-sub">1 Elim = 1 điểm &nbsp;·&nbsp; Top 1 = 12 điểm</div>
 </header>
 
 <div class="container">
@@ -559,10 +760,14 @@ h1 {
       <div class="ec-logo">Free Fire Esports</div>
       <div class="ec-title">MATCH RESULTS</div>
     </div>
-    <div>
+    <div class="ec-team-wrap">
       <div class="ec-team-label">TEAM</div>
       <div class="ec-team" id="ec-team">—</div>
     </div>
+  </div>
+  <div class="ec-meta">
+    <div class="ec-pill">1 ELIM = 1 PT</div>
+    <div class="ec-pill">TOP 1 = 12 PTS</div>
   </div>
   <div class="ec-games" id="ec-games"></div>
   <div class="ec-summary-box">
