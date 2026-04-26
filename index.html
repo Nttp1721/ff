@@ -518,7 +518,11 @@ h1 {
 
   <!-- TÊN ĐỘI -->
   <div class="team-card">
-    <div class="team-icon-wrap">🔫</div>
+    <div class="team-icon-wrap">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="rgba(245,200,66,0.25)" stroke="#f5c842" stroke-width="1.8" stroke-linejoin="round"/>
+      </svg>
+    </div>
     <input type="text" id="teamName" maxlength="30" placeholder="Tên đội của bạn..."
       oninput="updateTeamDisplay()" autocomplete="off">
   </div>
@@ -669,12 +673,14 @@ function setTop(idx, val) {
   games[idx].top = val === '' ? '' : Number(val);
   updateCard(idx);
   updateSummary();
+  saveState();
 }
 
 function setElims(idx, val) {
   games[idx].elims = Math.max(0, Number(val) || 0);
   updateCard(idx);
   updateSummary();
+  saveState();
 }
 
 function changeElim(idx, delta) {
@@ -683,6 +689,7 @@ function changeElim(idx, delta) {
   if (input) input.value = games[idx].elims;
   updateCard(idx);
   updateSummary();
+  saveState();
 }
 
 function updateCard(idx) {
@@ -740,10 +747,47 @@ function updateSummary() {
 
 function resetAll() {
   games = Array.from({length: numGames}, () => ({top: '', elims: 0}));
+  localStorage.removeItem('ff_state');
   render();
 }
 
-initGames(numGames);
+// ── LOCAL STORAGE ──
+function saveState() {
+  try {
+    localStorage.setItem('ff_state', JSON.stringify({
+      numGames, games,
+      teamName: document.getElementById('teamName').value
+    }));
+  } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('ff_state');
+    if (!raw) return false;
+    const s = JSON.parse(raw);
+    numGames = s.numGames || 3;
+    games = s.games || [];
+    if (s.teamName) {
+      document.getElementById('teamName').value = s.teamName;
+      updateTeamDisplay();
+    }
+    return true;
+  } catch(e) { return false; }
+}
+
+document.getElementById('teamName').addEventListener('input', saveState);
+
+// Auto-save khi đổi data
+const _origInitGames = initGames;
+initGames = function(n) { _origInitGames(n); saveState(); };
+
+// Boot: load saved hoặc khởi tạo mới
+if (loadState()) {
+  render();
+} else {
+  initGames(numGames);
+}
 
 // ── EXPORT ──
 function exportImage() {
