@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FF Tính Điểm – Đại Chiến Quân Đoàn</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.2/confetti.browser.min.js"></script>
+<style>
+  :root {
+    --gold: #f5c842;
+    --orange: #e87c1e;
+    --dark: #0d0a06;
+    --card: #1a1308;
+    --card2: #221a08;
+    --border: #3d2e0e;
+    --text: #f0e0b0;
+    --muted: #8a7040;
+    --green: #4caf50;
+    --red: #e53935;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at top, #2a1800 0%, transparent 60%),
+      radial-gradient(ellipse at bottom right, #1a0a00 0%, transparent 50%);
+  }
+
+  header {
+    text-align: center;
+    padding: 32px 16px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .logo-line {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 7vw, 56px);
+    letter-spacing: 3px;
+    background: linear-gradient(135deg, #f5c842 0%, #e87c1e 60%, #f5c842 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 2px;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  /* ── Game count pills ── */
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .pill {
+    cursor: pointer;
+    padding: 8px 18px;
+    border-radius: 30px;
+    border: 1.5px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 1px;
+    transition: all .18s;
+    user-select: none;
+  }
+
+  .pill:hover { border-color: var(--orange); color: var(--orange); }
+
+  .pill.active {
+    background: linear-gradient(135deg, var(--gold), var(--orange));
+    border-color: transparent;
+    color: #1a0d00;
+    font-weight: 700;
+    box-shadow: 0 0 16px #e87c1e55;
+  }
+
+  /* ── Game cards ── */
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .game-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+
+  .game-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--orange));
+    opacity: 0.5;
+  }
+
+  .game-card:hover { border-color: #5a3e10; }
+
+  .game-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .game-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+
+  .game-score-badge {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px 12px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--orange);
+    min-width: 70px;
+    text-align: center;
+    transition: all .2s;
+  }
+
+  .game-score-badge.nonzero {
+    border-color: var(--orange);
+    color: var(--gold);
+    box-shadow: 0 0 8px #e87c1e33;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  .field select,
+  .field input {
+    width: 100%;
+    background: var(--card2);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 8px 10px;
+    outline: none;
+    transition: border-color .15s;
+    -webkit-appearance: none;
+  }
+
+  .field select:focus,
+  .field input:focus { border-color: var(--orange); }
+
+  .field input[type=number]::-webkit-inner-spin-button { opacity: 1; }
+
+  .placement-pts {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+
+  .placement-pts span { color: var(--gold); font-weight: 700; }
+
+  /* ── Summary ── */
+  .summary {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .summary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center top, #e87c1e10, transparent 70%);
+    pointer-events: none;
+  }
+
+  .summary-title {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .stat-box {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+
+  .stat-box .val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .stat-box .lbl {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  .total-row {
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .total-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--muted);
+    letter-spacing: 3px;
+  }
+
+  .total-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--gold), var(--orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Team name ── */
+  .team-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .team-icon {
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .team-field {
+    flex: 1;
+  }
+
+  .team-field label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .team-field input {
+    width: 100%;
+    background: var(--card2);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    padding: 8px 12px;
+    outline: none;
+    transition: border-color .15s;
+  }
+
+  .team-field input::placeholder { color: #4a3a1a; letter-spacing: 2px; }
+  .team-field input:focus { border-color: var(--gold); }
+
+  /* ── Team name on export card ── */
+  .ec-team {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: #f0e0b0;
+    margin-top: 6px;
+  }
+
+  /* ── Reset btn ── */
+  .btn-reset {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all .18s;
+  }
+  .btn-reset:hover { border-color: var(--red); color: var(--red); }
+
+  /* ── Export button ── */
+  .btn-export {
+    margin-top: 12px;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--gold), var(--orange));
+    color: #1a0d00;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-export:hover { opacity: 0.88; transform: scale(0.99); }
+  .btn-export:active { transform: scale(0.97); }
+
+  /* ── Export card (hidden, used for screenshot) ── */
+  #exportCard {
+    position: fixed;
+    left: -9999px;
+    top: 0;
+    width: 600px;
+    background: #0d0a06;
+    padding: 36px 32px 32px;
+    font-family: 'Rajdhani', sans-serif;
+  }
+
+  .ec-header {
+    text-align: center;
+    margin-bottom: 28px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #3d2e0e;
+  }
+
+  .ec-logo {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: #8a7040;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .ec-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 44px;
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, #f5c842 0%, #e87c1e 60%, #f5c842 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+
+  .ec-games {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .ec-game {
+    background: #1a1308;
+    border: 1px solid #3d2e0e;
+    border-radius: 10px;
+    padding: 10px 6px;
+    text-align: center;
+  }
+
+  .ec-game-num {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #8a7040;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .ec-game-top {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 15px;
+    color: #f5c842;
+    line-height: 1;
+  }
+
+  .ec-game-elims {
+    font-size: 10px;
+    color: #8a7040;
+    margin: 2px 0;
+  }
+
+  .ec-game-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: #e87c1e;
+  }
+
+  .ec-divider {
+    border: none;
+    border-top: 1px solid #3d2e0e;
+    margin: 16px 0;
+  }
+
+  .ec-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .ec-stat {
+    background: #1a1308;
+    border: 1px solid #3d2e0e;
+    border-radius: 10px;
+    padding: 12px 8px;
+    text-align: center;
+  }
+
+  .ec-stat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: #f5c842;
+    line-height: 1;
+  }
+
+  .ec-stat-lbl {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #8a7040;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  .ec-total {
+    background: linear-gradient(135deg, #2a1800, #1a1000);
+    border: 1.5px solid #e87c1e55;
+    border-radius: 14px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .ec-total-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 3px;
+    color: #8a7040;
+  }
+
+  .ec-total-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    line-height: 1;
+    background: linear-gradient(135deg, #f5c842, #e87c1e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .ec-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: #3d2e0e;
+    text-transform: uppercase;
+  }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: linear-gradient(135deg, var(--gold), var(--orange));
+    color: #1a0d00;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    padding: 12px 28px;
+    border-radius: 30px;
+    z-index: 9999;
+    opacity: 0;
+    transition: all .3s cubic-bezier(.34,1.56,.64,1);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ── Booyah flash ── */
+  @keyframes booyah {
+    0%,100% { box-shadow: 0 0 0px transparent; }
+    50% { box-shadow: 0 0 20px var(--gold); }
+  }
+  .booyah-flash { animation: booyah 1.2s ease-in-out 2; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-line">Free Fire · Tournament Score</div>
+  <h1>Tính Điểm Giải</h1>
+  <div class="subtitle">1 ELIM = 1 ĐIỂM &nbsp;·&nbsp; ĐIỂM VỊ TRÍ THEO BẢNG</div>
+</header>
+
+<div class="container">
+
+  <div class="team-block">
+    <div class="team-icon">🔫</div>
+    <div class="team-field">
+      <label>Tên đội của bạn</label>
+      <input type="text" id="teamName" maxlength="30" placeholder="NHẬP TÊN ĐỘI..."
+        oninput="updateTeamDisplay()" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="section-label">Số game bắn</div>
+  <div class="pills" id="pills"></div>
+
+  <div class="games-grid" id="gamesGrid"></div>
+
+  <div class="summary" id="summary">
+    <div class="summary-title">Tổng kết</div>
+    <div class="summary-grid" id="statsGrid"></div>
+    <div class="total-row">
+      <div class="total-label">Tổng điểm</div>
+      <div class="total-val" id="grandTotal">0</div>
+    </div>
+    <button class="btn-reset" onclick="resetAll()">↺ Làm lại từ đầu</button>
+    <button class="btn-export" onclick="exportImage()">📸 &nbsp;XUẤT ẢNH ĐI KHOE</button>
+  </div>
+
+</div>
+
+<!-- Hidden export card -->
+<div id="exportCard">
+  <div class="ec-header">
+    <div class="ec-logo">Free Fire · Tournament Score</div>
+    <div class="ec-title" id="ec-title">Tính Điểm Giải</div>
+    <div class="ec-team" id="ec-team"></div>
+  </div>
+  <div class="ec-games" id="ec-games"></div>
+  <hr class="ec-divider">
+  <div class="ec-stats" id="ec-stats"></div>
+  <div class="ec-total">
+    <div class="ec-total-label">TỔNG ĐIỂM</div>
+    <div class="ec-total-val" id="ec-total-val">0</div>
+  </div>
+  <div class="ec-footer">ff-score · tinhdiemff.github.io</div>
+</div>
+
+<div class="toast" id="toast">✅ ĐÃ LƯU ẢNH!</div>
+
+<script>
+const PLACEMENT_PTS = [12,9,8,7,6,5,4,3,2,1,0,0];
+
+function placePts(top) {
+  if (top < 1 || top > 12) return 0;
+  return PLACEMENT_PTS[top - 1];
+}
+
+let numGames = 3;
+let games = [];   // {top, elims}
+
+function updateTeamDisplay() {
+  // Live update summary title if needed
+}
+
+function getTeamName() {
+  return document.getElementById('teamName').value.trim() || 'TEAM CHƯA ĐẶT TÊN';
+}
+
+function initGames(n) {
+  games = Array.from({length: n}, (_, i) => games[i] || {top: '', elims: 0});
+  render();
+}
+
+function render() {
+  // Pills
+  const pillsEl = document.getElementById('pills');
+  pillsEl.innerHTML = '';
+  for (let i = 1; i <= 10; i++) {
+    const p = document.createElement('div');
+    p.className = 'pill' + (i === numGames ? ' active' : '');
+    p.textContent = i;
+    p.onclick = () => { numGames = i; initGames(i); };
+    pillsEl.appendChild(p);
+  }
+
+  // Game cards
+  const grid = document.getElementById('gamesGrid');
+  grid.innerHTML = '';
+  games.forEach((g, idx) => {
+    const pp = g.top !== '' ? placePts(Number(g.top)) : 0;
+    const elims = Number(g.elims) || 0;
+    const score = pp + elims;
+
+    const card = document.createElement('div');
+    card.className = 'game-card';
+    card.id = `card-${idx}`;
+
+    // Top select options
+    let opts = `<option value="">-- Chọn top --</option>`;
+    opts += `<option value="1" ${g.top==1?'selected':''}>🏆 BOOYAH (Top 1)</option>`;
+    for (let t = 2; t <= 12; t++) {
+      opts += `<option value="${t}" ${g.top==t?'selected':''}>#${t}</option>`;
+    }
+
+    card.innerHTML = `
+      <div class="game-card-header">
+        <div class="game-num">GAME ${idx + 1}</div>
+        <div class="game-score-badge ${score>0?'nonzero':''}" id="badge-${idx}">${score} đ</div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>Hạng đạt được</label>
+          <select onchange="setTop(${idx}, this.value)">${opts}</select>
+          <div class="placement-pts">Điểm vị trí: <span id="pp-${idx}">${g.top !== '' ? pp : '—'}</span></div>
+        </div>
+        <div class="field">
+          <label>Số mạng (Elims)</label>
+          <input type="number" min="0" max="50" value="${g.elims}"
+            oninput="setElims(${idx}, this.value)" placeholder="0">
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+
+  updateSummary();
+}
+
+function setTop(idx, val) {
+  games[idx].top = val === '' ? '' : Number(val);
+  updateCard(idx);
+  updateSummary();
+}
+
+function setElims(idx, val) {
+  games[idx].elims = Math.max(0, Number(val) || 0);
+  updateCard(idx);
+  updateSummary();
+}
+
+function updateCard(idx) {
+  const g = games[idx];
+  const pp = g.top !== '' ? placePts(Number(g.top)) : 0;
+  const elims = Number(g.elims) || 0;
+  const score = pp + elims;
+
+  const badge = document.getElementById(`badge-${idx}`);
+  const ppEl = document.getElementById(`pp-${idx}`);
+  if (badge) {
+    badge.textContent = score + ' đ';
+    badge.className = 'game-score-badge' + (score > 0 ? ' nonzero' : '');
+  }
+  if (ppEl) ppEl.textContent = g.top !== '' ? pp : '—';
+
+  // Booyah flash + confetti
+  if (g.top == 1) {
+    const card = document.getElementById(`card-${idx}`);
+    card.classList.remove('booyah-flash');
+    void card.offsetWidth;
+    card.classList.add('booyah-flash');
+
+    // 🎉 Confetti burst!
+    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 },
+      colors: ['#f5c842','#e87c1e','#ffffff','#ff4444','#44ff88'] });
+    setTimeout(() => confetti({ particleCount: 60, spread: 120, origin: { y: 0.5 },
+      colors: ['#f5c842','#e87c1e'] }), 300);
+  }
+}
+
+function updateSummary() {
+  let totalElims = 0, totalPlace = 0, booyahs = 0;
+  games.forEach(g => {
+    const pp = g.top !== '' ? placePts(Number(g.top)) : 0;
+    totalPlace += pp;
+    totalElims += Number(g.elims) || 0;
+    if (g.top == 1) booyahs++;
+  });
+  const grand = totalPlace + totalElims;
+
+  const sg = document.getElementById('statsGrid');
+  sg.innerHTML = `
+    <div class="stat-box"><div class="val">${games.length}</div><div class="lbl">Số game</div></div>
+    <div class="stat-box"><div class="val">${totalElims}</div><div class="lbl">Tổng Elims</div></div>
+    <div class="stat-box"><div class="val">${totalPlace}</div><div class="lbl">Điểm vị trí</div></div>
+    <div class="stat-box"><div class="val">${booyahs}</div><div class="lbl">BOOYAH 🏆</div></div>
+  `;
+  document.getElementById('grandTotal').textContent = grand;
+
+  // Update summary title with team name
+  const tn = document.getElementById('teamName').value.trim();
+  document.querySelector('.summary-title').textContent = tn ? `🔫 ${tn} — Tổng kết` : 'Tổng kết';
+}
+
+function resetAll() {
+  games = Array.from({length: numGames}, () => ({top: '', elims: 0}));
+  render();
+}
+
+// Boot
+initGames(numGames);
+
+// ── Export image ──
+function exportImage() {
+  const PLACEMENT_PTS_LOCAL = [12,9,8,7,6,5,4,3,2,1,0,0];
+
+  // Build export card content
+  let totalElims = 0, totalPlace = 0, booyahs = 0;
+  games.forEach(g => {
+    const pp = g.top !== '' ? PLACEMENT_PTS_LOCAL[Number(g.top)-1] || 0 : 0;
+    totalPlace += pp;
+    totalElims += Number(g.elims) || 0;
+    if (g.top == 1) booyahs++;
+  });
+  const grand = totalPlace + totalElims;
+
+  // Games mini cards
+  const ecGames = document.getElementById('ec-games');
+  ecGames.style.gridTemplateColumns = games.length <= 5
+    ? `repeat(${games.length}, 1fr)`
+    : 'repeat(5, 1fr)';
+
+  ecGames.innerHTML = games.map((g, i) => {
+    const pp = g.top !== '' ? PLACEMENT_PTS_LOCAL[Number(g.top)-1] || 0 : 0;
+    const elims = Number(g.elims) || 0;
+    const score = pp + elims;
+    const topLabel = g.top == 1 ? '🏆' : g.top !== '' ? `#${g.top}` : '—';
+    return `
+      <div class="ec-game">
+        <div class="ec-game-num">G${i+1}</div>
+        <div class="ec-game-top">${topLabel}</div>
+        <div class="ec-game-elims">${elims} kills</div>
+        <div class="ec-game-score">${score}đ</div>
+      </div>`;
+  }).join('');
+
+  // Stats
+  document.getElementById('ec-stats').innerHTML = `
+    <div class="ec-stat"><div class="ec-stat-val">${games.length}</div><div class="ec-stat-lbl">Số game</div></div>
+    <div class="ec-stat"><div class="ec-stat-val">${totalElims}</div><div class="ec-stat-lbl">Tổng Elims</div></div>
+    <div class="ec-stat"><div class="ec-stat-val">${totalPlace}</div><div class="ec-stat-lbl">Điểm vị trí</div></div>
+    <div class="ec-stat"><div class="ec-stat-val">${booyahs}</div><div class="ec-stat-lbl">BOOYAH 🏆</div></div>
+  `;
+  // Team name on export card
+  const teamName = document.getElementById('teamName').value.trim();
+  document.getElementById('ec-team').textContent = teamName || '';
+  document.getElementById('ec-title').textContent = 'TÍNH ĐIỂM GIẢI';
+  document.getElementById('ec-total-val').textContent = grand;
+
+  const btn = document.querySelector('.btn-export');
+  btn.textContent = '⏳  ĐANG XỬ LÝ...';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    html2canvas(document.getElementById('exportCard'), {
+      scale: 2.5,
+      backgroundColor: '#0d0a06',
+      useCORS: true,
+      logging: false,
+    }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = `ff-score-${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+
+      btn.textContent = '📸  XUẤT ẢNH ĐI KHOE';
+      btn.disabled = false;
+
+      // Toast
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }).catch(() => {
+      btn.textContent = '📸  XUẤT ẢNH ĐI KHOE';
+      btn.disabled = false;
+    });
+  }, 100);
+}
+</script>
+</body>
+</html>
