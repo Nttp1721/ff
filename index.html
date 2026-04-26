@@ -544,7 +544,7 @@ h1 {
       <div class="total-val" id="grandTotal">0</div>
     </div>
     <div class="btns-row">
-      <button class="btn-reset" onclick="resetAll()">↺ Làm lại</button>
+      <button class="btn-reset" onclick="resetAll()">↺ Reset</button>
       <button class="btn-export" onclick="exportImage()">📸 Xuất ảnh khoe</button>
     </div>
   </div>
@@ -650,7 +650,7 @@ function render() {
           <div class="pts-hint">Vị trí: <span id="pp-${idx}">${g.top !== '' ? '+'+pp+'đ' : '—'}</span></div>
         </div>
         <div class="field-wrap">
-          <label>Elim (mạng)</label>
+          <label>Elims (mạng)</label>
           <div class="elim-wrap" id="elim-wrap-${idx}">
             <button class="elim-btn" onclick="changeElim(${idx}, -1)">−</button>
             <input class="elim-val" type="number" min="0" max="99"
@@ -733,7 +733,7 @@ function updateSummary() {
 
   document.getElementById('statsGrid').innerHTML = `
     <div class="stat-box"><div class="stat-val">${games.length}</div><div class="stat-lbl">Số game</div></div>
-    <div class="stat-box"><div class="stat-val">${totalElims}</div><div class="stat-lbl">Tổng Elim</div></div>
+    <div class="stat-box"><div class="stat-val">${totalElims}</div><div class="stat-lbl">Tổng Elims</div></div>
     <div class="stat-box"><div class="stat-val">${totalPlace}</div><div class="stat-lbl">Điểm vị trí</div></div>
     <div class="stat-box"><div class="stat-val">${booyahs} 🏆</div><div class="stat-lbl">BOOYAH</div></div>
   `;
@@ -850,4 +850,4 @@ function exportImage() {
 }
 </script>
 </body>
-  </html>
+      </html>
