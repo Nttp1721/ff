@@ -19,6 +19,8 @@
     --muted: #8a7040;
     --green: #4caf50;
     --red: #e53935;
+    --glow-gold: 0 0 15px rgba(245, 200, 66, 0.3);
+    --glass: rgba(30, 25, 15, 0.7);
   }
  
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -112,7 +114,7 @@
     box-shadow: 0 0 16px #e87c1e55;
   }
  
-  /* ── Game cards ── */
+  /* ── Game cards (Glassmorphism update) ── */
   .games-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -121,13 +123,15 @@
   }
  
   .game-card {
-    background: var(--card);
-    border: 1px solid var(--border);
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     border-radius: 14px;
     padding: 16px;
     position: relative;
     overflow: hidden;
-    transition: border-color .2s;
+    transition: transform 0.3s ease, border-color 0.3s;
   }
  
   .game-card::before {
@@ -139,7 +143,10 @@
     opacity: 0.5;
   }
  
-  .game-card:hover { border-color: #5a3e10; }
+  .game-card:hover { 
+    transform: translateY(-5px);
+    border-color: var(--gold); 
+  }
  
   .game-card-header {
     display: flex;
@@ -350,15 +357,6 @@
   .team-field input::placeholder { color: #4a3a1a; letter-spacing: 2px; }
   .team-field input:focus { border-color: var(--gold); }
  
-  /* ── Team name on export card ── */
-  .ec-team {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    letter-spacing: 4px;
-    color: #f0e0b0;
-    margin-top: 6px;
-  }
- 
   /* ── Reset btn ── */
   .btn-reset {
     margin-top: 20px;
@@ -383,11 +381,14 @@
     padding: 14px;
     border: none;
     border-radius: 10px;
-    background: linear-gradient(135deg, var(--gold), var(--orange));
+    background: linear-gradient(90deg, #f5c842, #e87c1e);
+    box-shadow: 0 0 20px rgba(232, 124, 30, 0.4);
     color: #1a0d00;
     font-family: 'Bebas Neue', sans-serif;
     font-size: 20px;
+    font-weight: 700;
     letter-spacing: 3px;
+    text-transform: uppercase;
     cursor: pointer;
     transition: all .2s;
     display: flex;
@@ -398,154 +399,215 @@
   .btn-export:hover { opacity: 0.88; transform: scale(0.99); }
   .btn-export:active { transform: scale(0.97); }
  
-  /* ── Export card (hidden, used for screenshot) ── */
+  /* ── Export card (Professional Esports Edition) ── */
   #exportCard {
     position: fixed;
     left: -9999px;
     top: 0;
-    width: 600px;
-    background: #0d0a06;
-    padding: 36px 32px 32px;
+    width: 850px; 
+    background: #09090b;
+    background-image: 
+      radial-gradient(circle at 100% 0%, #2a1800 0%, transparent 50%),
+      radial-gradient(circle at 0% 100%, #1a0a00 0%, transparent 50%);
+    padding: 0;
     font-family: 'Rajdhani', sans-serif;
+    border: 1px solid #222;
   }
- 
+
+  .ec-inner {
+    padding: 40px 48px;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .ec-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-10deg);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 180px;
+    color: rgba(255, 255, 255, 0.02);
+    white-space: nowrap;
+    z-index: -1;
+    pointer-events: none;
+    letter-spacing: 10px;
+  }
+
   .ec-header {
-    text-align: center;
-    margin-bottom: 28px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid #3d2e0e;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid var(--orange);
+    padding-bottom: 20px;
+    margin-bottom: 32px;
   }
- 
+
+  .ec-header-left { text-align: left; }
+  .ec-header-right { text-align: right; }
+
   .ec-logo {
-    font-size: 10px;
-    letter-spacing: 4px;
-    color: #8a7040;
+    font-size: 14px;
+    letter-spacing: 6px;
+    color: var(--orange);
     text-transform: uppercase;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
+    font-weight: 700;
   }
- 
+
   .ec-title {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 44px;
-    letter-spacing: 4px;
-    background: linear-gradient(135deg, #f5c842 0%, #e87c1e 60%, #f5c842 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-size: 52px;
+    color: #ffffff;
     line-height: 1;
+    letter-spacing: 3px;
   }
- 
-  .ec-games {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
-    margin-bottom: 20px;
+
+  .ec-team {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 46px;
+    color: var(--gold);
+    letter-spacing: 4px;
+    text-transform: uppercase;
   }
- 
-  .ec-game {
-    background: #1a1308;
-    border: 1px solid #3d2e0e;
-    border-radius: 10px;
-    padding: 10px 6px;
-    text-align: center;
-  }
- 
-  .ec-game-num {
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: #8a7040;
+
+  .ec-team-label {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 3px;
     text-transform: uppercase;
     margin-bottom: 4px;
   }
- 
+
+  .ec-games {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .ec-game {
+    flex: 1 1 calc(20% - 12px);
+    background: rgba(26, 19, 8, 0.8);
+    border-left: 3px solid #3d2e0e;
+    padding: 12px 16px;
+    min-width: 120px;
+  }
+
+  .ec-game.booyah {
+    border-left-color: var(--gold);
+    background: linear-gradient(90deg, rgba(245, 200, 66, 0.1), transparent);
+  }
+
+  .ec-game-num {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .ec-game-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
   .ec-game-top {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 15px;
-    color: #f5c842;
-    line-height: 1;
+    font-size: 24px;
+    color: #fff;
   }
- 
+
+  .ec-game-top.booyah-text { color: var(--gold); }
+
   .ec-game-elims {
-    font-size: 10px;
-    color: #8a7040;
-    margin: 2px 0;
+    font-size: 14px;
+    color: #aaa;
+    font-weight: 600;
   }
- 
+
   .ec-game-score {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 20px;
-    color: #e87c1e;
+    font-size: 24px;
+    color: var(--orange);
+    text-align: right;
+    margin-top: 4px;
   }
- 
-  .ec-divider {
-    border: none;
-    border-top: 1px solid #3d2e0e;
-    margin: 16px 0;
+
+  .ec-summary-box {
+    background: #110d07;
+    border: 1px solid #3d2e0e;
+    display: flex;
+    align-items: stretch;
   }
- 
-  .ec-stats {
+
+  .ec-stats-wrapper {
+    flex: 1;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 20px;
+    border-right: 1px solid #3d2e0e;
   }
- 
+
   .ec-stat {
-    background: #1a1308;
-    border: 1px solid #3d2e0e;
-    border-radius: 10px;
-    padding: 12px 8px;
+    padding: 20px;
     text-align: center;
+    border-right: 1px solid #2a2010;
   }
- 
+  .ec-stat:last-child { border-right: none; }
+
   .ec-stat-val {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    color: #f5c842;
+    font-size: 36px;
+    color: #fff;
     line-height: 1;
   }
- 
+
   .ec-stat-lbl {
-    font-size: 9px;
+    font-size: 11px;
     letter-spacing: 2px;
-    color: #8a7040;
+    color: var(--muted);
     text-transform: uppercase;
-    margin-top: 3px;
+    margin-top: 6px;
   }
- 
+
   .ec-total {
-    background: linear-gradient(135deg, #2a1800, #1a1000);
-    border: 1.5px solid #e87c1e55;
-    border-radius: 14px;
-    padding: 20px 24px;
+    padding: 20px 40px;
+    text-align: right;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
+    background: radial-gradient(circle at right, rgba(232, 124, 30, 0.15), transparent);
   }
- 
+
   .ec-total-label {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 24px;
-    letter-spacing: 3px;
-    color: #8a7040;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: var(--orange);
+    text-transform: uppercase;
   }
- 
+
   .ec-total-val {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 64px;
+    font-size: 72px;
     line-height: 1;
-    background: linear-gradient(135deg, #f5c842, #e87c1e);
+    background: linear-gradient(135deg, var(--gold), var(--orange));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
- 
+
   .ec-footer {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 10px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+    font-size: 11px;
     letter-spacing: 3px;
-    color: #3d2e0e;
+    color: #4a3a1a;
     text-transform: uppercase;
   }
  
@@ -618,21 +680,36 @@
  
 </div>
  
-<!-- Hidden export card -->
 <div id="exportCard">
-  <div class="ec-header">
-    <div class="ec-logo">Free Fire · Tournament Score</div>
-    <div class="ec-title" id="ec-title">Tính Điểm Giải</div>
-    <div class="ec-team" id="ec-team"></div>
+  <div class="ec-inner">
+    <div class="ec-watermark" id="ec-watermark">XDORZY</div>
+    
+    <div class="ec-header">
+      <div class="ec-header-left">
+        <div class="ec-logo">Free Fire Esports</div>
+        <div class="ec-title" id="ec-title">MATCH RESULTS</div>
+      </div>
+      <div class="ec-header-right">
+        <div class="ec-team-label">TEAM ROSTER</div>
+        <div class="ec-team" id="ec-team"></div>
+      </div>
+    </div>
+
+    <div class="ec-games" id="ec-games"></div>
+
+    <div class="ec-summary-box">
+      <div class="ec-stats-wrapper" id="ec-stats"></div>
+      <div class="ec-total">
+        <div class="ec-total-label">GRAND TOTAL</div>
+        <div class="ec-total-val" id="ec-total-val">0</div>
+      </div>
+    </div>
+
+    <div class="ec-footer">
+      <div id="ec-date">TOURNAMENT SCORECARD</div>
+      <div>GENERATED BY CUSTOM FF SYSTEM</div>
+    </div>
   </div>
-  <div class="ec-games" id="ec-games"></div>
-  <hr class="ec-divider">
-  <div class="ec-stats" id="ec-stats"></div>
-  <div class="ec-total">
-    <div class="ec-total-label">TỔNG ĐIỂM</div>
-    <div class="ec-total-val" id="ec-total-val">0</div>
-  </div>
-  <div class="ec-footer">ff-score · tinhdiemff.github.io</div>
 </div>
  
 <div class="toast" id="toast">✅ ĐÃ LƯU ẢNH!</div>
@@ -646,14 +723,11 @@ function placePts(top) {
 }
  
 let numGames = 3;
-let games = [];   // {top, elims}
+let games = [];   
  
 function updateTeamDisplay() {
-  // Live update summary title if needed
-}
- 
-function getTeamName() {
-  return document.getElementById('teamName').value.trim() || 'TEAM CHƯA ĐẶT TÊN';
+  const tn = document.getElementById('teamName').value.trim();
+  document.querySelector('.summary-title').textContent = tn ? `🔫 ${tn} — Tổng kết` : 'Tổng kết';
 }
  
 function initGames(n) {
@@ -662,7 +736,6 @@ function initGames(n) {
 }
  
 function render() {
-  // Pills
   const pillsEl = document.getElementById('pills');
   pillsEl.innerHTML = '';
   for (let i = 1; i <= 10; i++) {
@@ -673,7 +746,6 @@ function render() {
     pillsEl.appendChild(p);
   }
  
-  // Game cards
   const grid = document.getElementById('gamesGrid');
   grid.innerHTML = '';
   games.forEach((g, idx) => {
@@ -685,7 +757,6 @@ function render() {
     card.className = 'game-card';
     card.id = `card-${idx}`;
  
-    // Top select options
     let opts = `<option value="">-- Chọn top --</option>`;
     opts += `<option value="1" ${g.top==1?'selected':''}>🏆 BOOYAH (Top 1)</option>`;
     for (let t = 2; t <= 12; t++) {
@@ -741,14 +812,12 @@ function updateCard(idx) {
   }
   if (ppEl) ppEl.textContent = g.top !== '' ? pp : '—';
  
-  // Booyah flash + confetti
   if (g.top == 1) {
     const card = document.getElementById(`card-${idx}`);
     card.classList.remove('booyah-flash');
     void card.offsetWidth;
     card.classList.add('booyah-flash');
  
-    // 🎉 Confetti burst!
     confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 },
       colors: ['#f5c842','#e87c1e','#ffffff','#ff4444','#44ff88'] });
     setTimeout(() => confetti({ particleCount: 60, spread: 120, origin: { y: 0.5 },
@@ -774,10 +843,6 @@ function updateSummary() {
     <div class="stat-box"><div class="val">${booyahs}</div><div class="lbl">BOOYAH 🏆</div></div>
   `;
   document.getElementById('grandTotal').textContent = grand;
- 
-  // Update summary title with team name
-  const tn = document.getElementById('teamName').value.trim();
-  document.querySelector('.summary-title').textContent = tn ? `🔫 ${tn} — Tổng kết` : 'Tổng kết';
 }
  
 function resetAll() {
@@ -792,7 +857,6 @@ initGames(numGames);
 function exportImage() {
   const PLACEMENT_PTS_LOCAL = [12,9,8,7,6,5,4,3,2,1,0,0];
  
-  // Build export card content
   let totalElims = 0, totalPlace = 0, booyahs = 0;
   games.forEach(g => {
     const pp = g.top !== '' ? PLACEMENT_PTS_LOCAL[Number(g.top)-1] || 0 : 0;
@@ -802,37 +866,46 @@ function exportImage() {
   });
   const grand = totalPlace + totalElims;
  
+  // Update Watermark & Team Name
+  const teamNameInput = document.getElementById('teamName').value.trim();
+  const displayTeamName = teamNameInput || 'XDORZY';
+  
+  document.getElementById('ec-watermark').textContent = displayTeamName;
+  document.getElementById('ec-team').textContent = displayTeamName;
+
+  // Add Date
+  const now = new Date();
+  const dateString = now.toLocaleDateString('vi-VN');
+  document.getElementById('ec-date').textContent = `DATE: ${dateString}`;
+
   // Games mini cards
   const ecGames = document.getElementById('ec-games');
-  ecGames.style.gridTemplateColumns = games.length <= 5
-    ? `repeat(${games.length}, 1fr)`
-    : 'repeat(5, 1fr)';
- 
   ecGames.innerHTML = games.map((g, i) => {
     const pp = g.top !== '' ? PLACEMENT_PTS_LOCAL[Number(g.top)-1] || 0 : 0;
     const elims = Number(g.elims) || 0;
     const score = pp + elims;
-    const topLabel = g.top == 1 ? '🏆' : g.top !== '' ? `#${g.top}` : '—';
+    const isBooyah = g.top == 1;
+    const topLabel = isBooyah ? 'BOOYAH' : g.top !== '' ? `#${g.top}` : '—';
+    
     return `
-      <div class="ec-game">
-        <div class="ec-game-num">G${i+1}</div>
-        <div class="ec-game-top">${topLabel}</div>
-        <div class="ec-game-elims">${elims} kills</div>
-        <div class="ec-game-score">${score}đ</div>
+      <div class="ec-game ${isBooyah ? 'booyah' : ''}">
+        <div class="ec-game-num">MATCH ${i+1}</div>
+        <div class="ec-game-row">
+          <div class="ec-game-top ${isBooyah ? 'booyah-text' : ''}">${topLabel}</div>
+          <div class="ec-game-elims">${elims} KILLS</div>
+        </div>
+        <div class="ec-game-score">+${score} PTS</div>
       </div>`;
   }).join('');
  
   // Stats
   document.getElementById('ec-stats').innerHTML = `
-    <div class="ec-stat"><div class="ec-stat-val">${games.length}</div><div class="ec-stat-lbl">Số game</div></div>
-    <div class="ec-stat"><div class="ec-stat-val">${totalElims}</div><div class="ec-stat-lbl">Tổng Elims</div></div>
-    <div class="ec-stat"><div class="ec-stat-val">${totalPlace}</div><div class="ec-stat-lbl">Điểm vị trí</div></div>
-    <div class="ec-stat"><div class="ec-stat-val">${booyahs}</div><div class="ec-stat-lbl">BOOYAH 🏆</div></div>
+    <div class="ec-stat"><div class="ec-stat-val">${games.length}</div><div class="ec-stat-lbl">MATCHES</div></div>
+    <div class="ec-stat"><div class="ec-stat-val">${totalElims}</div><div class="ec-stat-lbl">TOTAL KILLS</div></div>
+    <div class="ec-stat"><div class="ec-stat-val">${totalPlace}</div><div class="ec-stat-lbl">PLACE PTS</div></div>
+    <div class="ec-stat"><div class="ec-stat-val">${booyahs}</div><div class="ec-stat-lbl">BOOYAHS</div></div>
   `;
-  // Team name on export card
-  const teamName = document.getElementById('teamName').value.trim();
-  document.getElementById('ec-team').textContent = teamName || '';
-  document.getElementById('ec-title').textContent = 'TÍNH ĐIỂM GIẢI';
+  
   document.getElementById('ec-total-val').textContent = grand;
  
   const btn = document.querySelector('.btn-export');
@@ -842,7 +915,7 @@ function exportImage() {
   setTimeout(() => {
     html2canvas(document.getElementById('exportCard'), {
       scale: 2.5,
-      backgroundColor: '#0d0a06',
+      backgroundColor: '#09090b',
       useCORS: true,
       logging: false,
     }).then(canvas => {
@@ -851,15 +924,14 @@ function exportImage() {
       link.href = canvas.toDataURL('image/png');
       link.click();
  
-      btn.textContent = '📸  XUẤT ẢNH ĐI KHOE';
+      btn.innerHTML = '📸 &nbsp;XUẤT ẢNH ĐI KHOE';
       btn.disabled = false;
  
-      // Toast
       const toast = document.getElementById('toast');
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 2500);
     }).catch(() => {
-      btn.textContent = '📸  XUẤT ẢNH ĐI KHOE';
+      btn.innerHTML = '📸 &nbsp;XUẤT ẢNH ĐI KHOE';
       btn.disabled = false;
     });
   }, 100);
