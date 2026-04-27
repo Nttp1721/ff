@@ -2,7 +2,10 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f1117">
 <title>FF Tính Điểm - Custom FF</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Oswald:wght@700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -18,25 +21,38 @@
   --green: #2dd4a3;
   --text: #e8eaf0;
   --muted: #6b7280;
-  --light: #9ca3b8;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0; padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+html { height: 100%; }
 
 body {
   background: var(--bg);
   color: var(--text);
   font-family: 'Nunito', sans-serif;
-  min-height: 100vh;
-  padding-bottom: 40px;
+  min-height: 100%;
+  padding-bottom: calc(80px + var(--safe-bot));
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
 }
 
 /* ── HEADER ── */
 header {
   background: linear-gradient(180deg, #12141f 0%, var(--bg) 100%);
   border-bottom: 1px solid var(--border);
-  padding: 20px 16px 16px;
+  padding: calc(12px + var(--safe-top)) 16px 14px;
   text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .header-badge {
@@ -52,12 +68,12 @@ header {
   letter-spacing: 2px;
   color: var(--gold);
   text-transform: uppercase;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 h1 {
   font-family: 'Oswald', sans-serif;
-  font-size: clamp(36px, 8vw, 56px);
+  font-size: 36px;
   letter-spacing: 3px;
   background: linear-gradient(135deg, #f5c842, #ff7c20);
   -webkit-background-clip: text;
@@ -67,92 +83,92 @@ h1 {
 }
 
 .header-sub {
-  margin-top: 6px;
+  margin-top: 5px;
   font-size: 12px;
   color: var(--muted);
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 /* ── CONTAINER ── */
-.container { max-width: 800px; margin: 0 auto; padding: 20px 14px; }
+.container {
+  padding: 16px 14px;
+  max-width: 600px;
+  margin: 0 auto;
+}
 
 /* ── TEAM INPUT ── */
 .team-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 20px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
-.team-icon-wrap {
-  width: 48px; height: 48px;
+.team-icon {
+  width: 44px; height: 44px;
   background: rgba(245,200,66,0.12);
-  border-radius: 12px;
+  border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 22px;
+  font-size: 20px;
   flex-shrink: 0;
 }
 
 .team-card input {
   flex: 1;
-  background: var(--surface2);
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
+  background: transparent;
+  border: none;
   color: var(--text);
   font-family: 'Nunito', sans-serif;
-  font-size: 18px;
+  font-size: 18px; /* must be ≥16 to prevent iOS zoom */
   font-weight: 800;
-  padding: 10px 14px;
   outline: none;
-  transition: border-color .15s;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  min-width: 0;
 }
 .team-card input::placeholder { color: var(--border); font-weight: 600; }
-.team-card input:focus { border-color: var(--gold); }
 
-/* ── GAME COUNT ── */
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
+/* ── SECTION LABEL ── */
 .section-title {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 2px;
   color: var(--muted);
   text-transform: uppercase;
+  margin-bottom: 10px;
 }
 
+/* ── PILLS ── */
 .pills {
   display: flex;
-  flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 22px;
+  margin-bottom: 18px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 4px;
 }
+.pills::-webkit-scrollbar { display: none; }
 
 .pill {
   cursor: pointer;
-  width: 46px; height: 46px;
-  border-radius: 12px;
+  min-width: 52px; height: 52px;
+  border-radius: 14px;
   border: 2px solid var(--border);
   background: var(--surface);
   color: var(--muted);
   font-family: 'Nunito', sans-serif;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 800;
   display: flex; align-items: center; justify-content: center;
-  transition: all .15s;
+  flex-shrink: 0;
   user-select: none;
+  transition: all .12s;
+  -webkit-user-select: none;
 }
-
-.pill:hover { border-color: var(--orange); color: var(--orange); }
 
 .pill.active {
   background: linear-gradient(135deg, var(--gold), var(--orange));
@@ -163,10 +179,10 @@ h1 {
 
 /* ── GAME CARDS ── */
 .games-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 12px;
-  margin-bottom: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
 }
 
 .game-card {
@@ -174,13 +190,18 @@ h1 {
   border: 2px solid var(--border);
   border-radius: 16px;
   padding: 14px;
-  transition: border-color .2s, transform .2s;
+  transition: border-color .2s;
   position: relative;
 }
 
-.game-card:hover { border-color: var(--surface2); transform: translateY(-2px); }
-.game-card.filled { border-color: var(--surface2); }
+.game-card.filled { border-color: #2e3a55; }
 .game-card.booyah-card { border-color: var(--gold) !important; }
+
+@keyframes booyahanim {
+  0%,100% { box-shadow: 0 0 0 transparent; }
+  50% { box-shadow: 0 0 24px rgba(245,200,66,0.5); }
+}
+.booyah-flash { animation: booyahanim 1s ease-in-out 2; }
 
 .card-top-row {
   display: flex;
@@ -201,28 +222,18 @@ h1 {
   background: var(--surface2);
   border: 1.5px solid var(--border);
   border-radius: 20px;
-  padding: 3px 12px;
+  padding: 4px 14px;
   font-family: 'Oswald', sans-serif;
-  font-size: 18px;
+  font-size: 20px;
   color: var(--muted);
   transition: all .2s;
-  min-width: 60px;
+  min-width: 64px;
   text-align: center;
 }
+.score-chip.active { border-color: var(--orange); color: var(--gold); background: rgba(255,124,32,0.1); }
+.score-chip.booyah { border-color: var(--gold); color: var(--gold); background: rgba(245,200,66,0.15); }
 
-.score-chip.active {
-  border-color: var(--orange);
-  color: var(--gold);
-  background: rgba(255,124,32,0.1);
-}
-
-.score-chip.booyah {
-  border-color: var(--gold);
-  color: var(--gold);
-  background: rgba(245,200,66,0.15);
-}
-
-/* ── INPUTS in card ── */
+/* ── CARD FIELDS ── */
 .fields-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -236,54 +247,52 @@ h1 {
   letter-spacing: 1.5px;
   color: var(--muted);
   text-transform: uppercase;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
-/* SELECT - hạng */
+/* SELECT – ≥16px font to stop iOS zoom */
 .field-wrap select {
   width: 100%;
   background: var(--surface2);
   border: 2px solid var(--border);
-  border-radius: 10px;
+  border-radius: 12px;
   color: var(--text);
   font-family: 'Nunito', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
-  padding: 9px 8px;
+  padding: 11px 8px;
   outline: none;
   -webkit-appearance: none;
   cursor: pointer;
-  transition: border-color .15s;
 }
 .field-wrap select:focus { border-color: var(--gold); }
 .field-wrap select option { background: #1a1d27; }
 
-/* ELIM INPUT - big and clear */
+/* ELIM STEPPER */
 .elim-wrap {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   background: var(--surface2);
   border: 2px solid var(--border);
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
-  transition: border-color .15s;
+  height: 48px;
 }
 .elim-wrap:focus-within { border-color: var(--gold); }
 
 .elim-btn {
-  width: 36px; height: 44px;
+  width: 44px;
   background: transparent;
   border: none;
-  color: var(--muted);
-  font-size: 20px;
+  color: var(--text);
+  font-size: 22px;
   font-weight: 900;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: color .1s, background .1s;
   flex-shrink: 0;
   user-select: none;
+  -webkit-user-select: none;
 }
-.elim-btn:hover { color: var(--text); background: rgba(255,255,255,0.06); }
 .elim-btn:active { background: rgba(255,255,255,0.1); }
 
 .elim-val {
@@ -300,8 +309,6 @@ h1 {
   min-width: 0;
   padding: 0;
 }
-
-/* hide spinner */
 .elim-val::-webkit-outer-spin-button,
 .elim-val::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .elim-val[type=number] { -moz-appearance: textfield; }
@@ -319,11 +326,10 @@ h1 {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 20px;
-  padding: 20px;
+  padding: 18px;
   position: relative;
   overflow: hidden;
 }
-
 .summary::before {
   content: '';
   position: absolute;
@@ -333,23 +339,19 @@ h1 {
 }
 
 .summary-title {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 2px;
   color: var(--muted);
   text-transform: uppercase;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .stats-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 18px;
-}
-
-@media (max-width: 480px) {
-  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
 }
 
 .stat-box {
@@ -359,14 +361,12 @@ h1 {
   padding: 12px 8px;
   text-align: center;
 }
-
 .stat-val {
   font-family: 'Oswald', sans-serif;
-  font-size: 34px;
+  font-size: 32px;
   color: var(--text);
   line-height: 1;
 }
-
 .stat-lbl {
   font-size: 10px;
   font-weight: 800;
@@ -380,13 +380,12 @@ h1 {
   background: linear-gradient(135deg, rgba(245,200,66,0.08), rgba(255,124,32,0.08));
   border: 1px solid rgba(245,200,66,0.2);
   border-radius: 14px;
-  padding: 16px 20px;
+  padding: 14px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
-
 .total-label {
   font-size: 13px;
   font-weight: 800;
@@ -394,10 +393,9 @@ h1 {
   color: var(--muted);
   text-transform: uppercase;
 }
-
 .total-val {
   font-family: 'Oswald', sans-serif;
-  font-size: 56px;
+  font-size: 52px;
   line-height: 1;
   background: linear-gradient(135deg, var(--gold), var(--orange));
   -webkit-background-clip: text;
@@ -409,42 +407,37 @@ h1 {
 
 .btn-reset {
   flex: 1;
-  padding: 12px;
+  height: 52px;
   background: transparent;
   border: 2px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   color: var(--muted);
   font-family: 'Nunito', sans-serif;
   font-size: 15px;
   font-weight: 800;
-  letter-spacing: 1px;
   cursor: pointer;
-  transition: all .15s;
 }
-.btn-reset:hover { border-color: var(--accent); color: var(--accent); }
+.btn-reset:active { border-color: var(--accent); color: var(--accent); }
 
 .btn-export {
   flex: 2;
-  padding: 12px;
+  height: 52px;
   background: linear-gradient(90deg, var(--gold), var(--orange));
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   color: #1a0d00;
   font-family: 'Nunito', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 900;
-  letter-spacing: 1px;
   cursor: pointer;
-  transition: opacity .15s, transform .1s;
   display: flex; align-items: center; justify-content: center; gap: 8px;
 }
-.btn-export:hover { opacity: 0.88; }
-.btn-export:active { transform: scale(0.98); }
+.btn-export:active { opacity: 0.82; }
 
 /* ── TOAST ── */
 .toast {
   position: fixed;
-  bottom: 28px;
+  bottom: calc(24px + var(--safe-bot));
   left: 50%;
   transform: translateX(-50%) translateY(80px);
   background: var(--green);
@@ -458,15 +451,9 @@ h1 {
   opacity: 0;
   transition: all .3s cubic-bezier(.34,1.56,.64,1);
   pointer-events: none;
+  white-space: nowrap;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* ── BOOYAH anim ── */
-@keyframes booyahanim {
-  0%,100% { box-shadow: 0 0 0 transparent; }
-  50% { box-shadow: 0 0 24px rgba(245,200,66,0.5); }
-}
-.booyah-flash { animation: booyahanim 1s ease-in-out 2; }
 
 /* ── EXPORT CARD (off-screen) ── */
 #exportCard {
@@ -484,9 +471,8 @@ h1 {
   color: #eef2ff;
   overflow: hidden;
   padding: 34px 36px 30px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+  position: relative;
 }
-
 #exportCard::before {
   content: '';
   position: absolute;
@@ -498,202 +484,9 @@ h1 {
   opacity: .18;
   pointer-events: none;
 }
-
-.ec-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  position: relative;
-  z-index: 1;
-  padding-bottom: 20px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-.ec-logo {
-  font-size: 11px;
-  letter-spacing: 3px;
-  color: #e0a23a;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-  font-weight: 800;
-}
-.ec-title {
-  font-family: 'Oswald', sans-serif;
-  font-size: 50px;
-  color: #fff;
-  letter-spacing: 2px;
-  line-height: 0.95;
-  text-transform: uppercase;
-  text-shadow: 0 8px 22px rgba(0,0,0,0.35);
-}
-.ec-team-wrap {
-  text-align: right;
-  background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 14px;
-  padding: 10px 16px 12px;
-  min-width: 240px;
-}
-.ec-team-label {
-  font-size: 10px;
-  color: #b9c0d4;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin-bottom: 2px;
-}
-.ec-team {
-  font-family: 'Oswald', sans-serif;
-  font-size: 34px;
-  color: #efb24b;
-  letter-spacing: 3px;
-  line-height: 1.08;
-  text-transform: uppercase;
-}
-
-.ec-meta {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-.ec-pill {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  color: #d2d8e9;
-  text-transform: uppercase;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.13);
-  background: rgba(255,255,255,0.04);
-  padding: 6px 12px;
-}
-
-.ec-games {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 10px;
-  margin-bottom: 18px;
-}
-.ec-game {
-  background: linear-gradient(150deg, rgba(18,22,34,0.85), rgba(13,16,25,0.9));
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 14px;
-  padding: 10px 11px;
-  min-height: 108px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.ec-game.booyah {
-  border-color: rgba(245,200,66,0.52);
-  background: linear-gradient(150deg, rgba(56,44,20,0.55), rgba(23,21,16,0.92));
-}
-.ec-game-num {
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: #95a0b9;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-.ec-game-top {
-  font-family: 'Oswald', sans-serif;
-  font-size: 24px;
-  color: #f7f9ff;
-  line-height: 1;
-}
-.ec-game-top.bt { color: #f8cf66; }
-.ec-game-elims {
-  font-size: 12px;
-  color: #a8b1c8;
-  font-weight: 700;
-}
-.ec-game-score {
-  font-family: 'Oswald', sans-serif;
-  font-size: 26px;
-  color: #df7b2a;
-  text-align: right;
-  line-height: 1;
-  margin-top: 4px;
-}
-
-.ec-summary-box {
-  position: relative;
-  z-index: 1;
-  background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 16px;
-  display: flex;
-  align-items: stretch;
-}
-.ec-stats-wrapper {
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  border-right: 1px solid rgba(255,255,255,0.12);
-}
-.ec-stat {
-  padding: 16px 12px;
-  text-align: center;
-  border-right: 1px solid rgba(255,255,255,0.08);
-}
-.ec-stat:last-child { border-right: none; }
-.ec-stat-val {
-  font-family: 'Oswald', sans-serif;
-  font-size: 36px;
-  color: #f8faff;
-  line-height: 1;
-}
-.ec-stat-lbl {
-  font-size: 10px;
-  letter-spacing: 1.5px;
-  color: #9ca8c2;
-  text-transform: uppercase;
-  margin-top: 5px;
-}
-.ec-total {
-  padding: 14px 24px;
-  min-width: 220px;
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background: radial-gradient(circle at right, rgba(222,123,40,0.26), transparent 70%);
-}
-.ec-total-label {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 3px;
-  color: #df9339;
-  text-transform: uppercase;
-}
-.ec-total-val {
-  font-family: 'Oswald', sans-serif;
-  font-size: 68px;
-  line-height: .95;
-  background: linear-gradient(135deg, #eaba64, #cb5f1d);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.ec-footer {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  justify-content: space-between;
-  margin-top: 14px;
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: #8f9bb8;
-  text-transform: uppercase;
-  font-weight: 700;
-}
 .ec-watermark {
   position: absolute;
-  top: 50%;
-  left: 52%;
+  top: 50%; left: 52%;
   transform: translate(-50%,-50%) rotate(-12deg);
   font-family: 'Oswald', sans-serif;
   font-size: 166px;
@@ -703,70 +496,107 @@ h1 {
   pointer-events: none;
   letter-spacing: 9px;
 }
+.ec-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative; z-index: 1;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.ec-logo { font-size: 11px; letter-spacing: 3px; color: #e0a23a; text-transform: uppercase; margin-bottom: 8px; font-weight: 800; }
+.ec-title { font-family: 'Oswald', sans-serif; font-size: 50px; color: #fff; letter-spacing: 2px; line-height: 0.95; text-transform: uppercase; text-shadow: 0 8px 22px rgba(0,0,0,0.35); }
+.ec-team-wrap { text-align: right; background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.14); border-radius: 14px; padding: 10px 16px 12px; min-width: 240px; }
+.ec-team-label { font-size: 10px; color: #b9c0d4; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 2px; }
+.ec-team { font-family: 'Oswald', sans-serif; font-size: 34px; color: #efb24b; letter-spacing: 3px; line-height: 1.08; text-transform: uppercase; }
+.ec-meta { position: relative; z-index: 1; display: flex; gap: 8px; margin-bottom: 18px; }
+.ec-pill { font-size: 10px; font-weight: 800; letter-spacing: 2px; color: #d2d8e9; text-transform: uppercase; border-radius: 999px; border: 1px solid rgba(255,255,255,0.13); background: rgba(255,255,255,0.04); padding: 6px 12px; }
+.ec-games { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
+.ec-game { background: linear-gradient(150deg, rgba(18,22,34,0.85), rgba(13,16,25,0.9)); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 10px 11px; min-height: 108px; display: flex; flex-direction: column; justify-content: space-between; }
+.ec-game.booyah { border-color: rgba(245,200,66,0.52); background: linear-gradient(150deg, rgba(56,44,20,0.55), rgba(23,21,16,0.92)); }
+.ec-game-num { font-size: 10px; letter-spacing: 2px; color: #95a0b9; text-transform: uppercase; margin-bottom: 6px; }
+.ec-game-top { font-family: 'Oswald', sans-serif; font-size: 24px; color: #f7f9ff; line-height: 1; }
+.ec-game-top.bt { color: #f8cf66; }
+.ec-game-elims { font-size: 12px; color: #a8b1c8; font-weight: 700; }
+.ec-game-score { font-family: 'Oswald', sans-serif; font-size: 26px; color: #df7b2a; text-align: right; line-height: 1; margin-top: 4px; }
+.ec-summary-box { position: relative; z-index: 1; background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.14); border-radius: 16px; display: flex; align-items: stretch; }
+.ec-stats-wrapper { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); border-right: 1px solid rgba(255,255,255,0.12); }
+.ec-stat { padding: 16px 12px; text-align: center; border-right: 1px solid rgba(255,255,255,0.08); }
+.ec-stat:last-child { border-right: none; }
+.ec-stat-val { font-family: 'Oswald', sans-serif; font-size: 36px; color: #f8faff; line-height: 1; }
+.ec-stat-lbl { font-size: 10px; letter-spacing: 1.5px; color: #9ca8c2; text-transform: uppercase; margin-top: 5px; }
+.ec-total { padding: 14px 24px; min-width: 220px; text-align: right; display: flex; flex-direction: column; justify-content: center; background: radial-gradient(circle at right, rgba(222,123,40,0.26), transparent 70%); }
+.ec-total-label { font-size: 10px; font-weight: 800; letter-spacing: 3px; color: #df9339; text-transform: uppercase; }
+.ec-total-val { font-family: 'Oswald', sans-serif; font-size: 68px; line-height: .95; background: linear-gradient(135deg, #eaba64, #cb5f1d); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.ec-footer { position: relative; z-index: 1; display: flex; justify-content: space-between; margin-top: 14px; font-size: 10px; letter-spacing: 2px; color: #8f9bb8; text-transform: uppercase; font-weight: 700; }
 
-/* ── PREVIEW MODAL ── */
+/* ── PREVIEW BOTTOM SHEET ── */
 #previewOverlay {
   display: none;
   position: fixed;
   inset: 0;
   z-index: 10000;
-  background: rgba(0,0,0,0.88);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  align-items: center;
+  background: rgba(0,0,0,0.75);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  align-items: flex-end;
   justify-content: center;
-  padding: 20px;
-  animation: fadeIn .2s ease;
 }
-#previewOverlay.open { display: flex; flex-direction: column; gap: 16px; }
+#previewOverlay.open { display: flex; }
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-.preview-box {
+.sheet {
   background: #12141f;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 20px;
-  padding: 16px;
-  max-width: 700px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 24px 24px 0 0;
   width: 100%;
-  max-height: 80vh;
-  overflow-y: auto;
+  max-width: 600px;
+  padding: 0 0 calc(12px + var(--safe-bot));
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  animation: slideUp .25s cubic-bezier(.34,1.56,.64,1);
+  animation: sheetUp .28s cubic-bezier(.34,1.4,.64,1);
+}
+@keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.sheet-handle {
+  width: 36px; height: 4px;
+  background: var(--border);
+  border-radius: 4px;
+  margin: 12px auto 14px;
+  flex-shrink: 0;
 }
 
-@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-.preview-header {
+.sheet-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0 16px 12px;
+  flex-shrink: 0;
 }
-
-.preview-title {
-  font-size: 13px;
+.sheet-title {
+  font-size: 15px;
   font-weight: 800;
-  letter-spacing: 2px;
-  color: #6b7280;
-  text-transform: uppercase;
+  color: var(--text);
 }
-
-.preview-close {
-  width: 32px; height: 32px;
+.sheet-close {
+  width: 36px; height: 36px;
   border-radius: 50%;
-  border: 1.5px solid #2e3347;
+  border: 1.5px solid var(--border);
   background: transparent;
-  color: #6b7280;
-  font-size: 18px;
+  color: var(--muted);
+  font-size: 16px;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: all .15s;
-  line-height: 1;
 }
-.preview-close:hover { border-color: #ff4d6d; color: #ff4d6d; }
+.sheet-close:active { background: rgba(255,77,109,0.15); border-color: var(--accent); color: var(--accent); }
 
+.sheet-img-wrap {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 16px;
+}
 #previewImg {
   width: 100%;
   border-radius: 12px;
@@ -774,42 +604,56 @@ h1 {
   border: 1px solid rgba(255,255,255,0.07);
 }
 
-.preview-actions {
+/* iOS long-press hint */
+.ios-hint {
+  display: none;
+  margin-top: 10px;
+  background: rgba(245,200,66,0.1);
+  border: 1px solid rgba(245,200,66,0.25);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold);
+  text-align: center;
+  line-height: 1.4;
+}
+
+.sheet-actions {
   display: flex;
   gap: 10px;
+  padding: 14px 16px 0;
+  flex-shrink: 0;
 }
+
+.btn-cancel-sheet {
+  width: 52px; height: 52px;
+  background: transparent;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  color: var(--muted);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.btn-cancel-sheet:active { border-color: var(--accent); color: var(--accent); }
 
 .btn-dl {
   flex: 1;
-  padding: 14px;
-  background: linear-gradient(90deg, #f5c842, #ff7c20);
+  height: 52px;
+  background: linear-gradient(90deg, var(--gold), var(--orange));
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   color: #1a0d00;
   font-family: 'Nunito', sans-serif;
   font-size: 16px;
   font-weight: 900;
-  letter-spacing: 1px;
   cursor: pointer;
-  transition: opacity .15s, transform .1s;
   display: flex; align-items: center; justify-content: center; gap: 8px;
 }
-.btn-dl:hover { opacity: 0.88; }
-.btn-dl:active { transform: scale(0.98); }
-
-.btn-cancel {
-  padding: 14px 20px;
-  background: transparent;
-  border: 2px solid #2e3347;
-  border-radius: 12px;
-  color: #6b7280;
-  font-family: 'Nunito', sans-serif;
-  font-size: 15px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all .15s;
-}
-.btn-cancel:hover { border-color: #ff4d6d; color: #ff4d6d; }
+.btn-dl:active { opacity: 0.82; }
+.btn-dl:disabled { opacity: 0.5; }
 
 </style>
 </head>
@@ -825,26 +669,20 @@ h1 {
 
   <!-- TÊN ĐỘI -->
   <div class="team-card">
-    <div class="team-icon-wrap">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="rgba(245,200,66,0.25)" stroke="#f5c842" stroke-width="1.8" stroke-linejoin="round"/>
-      </svg>
-    </div>
+    <div class="team-icon">⭐</div>
     <input type="text" id="teamName" maxlength="30" placeholder="Tên đội của bạn..."
-      oninput="updateTeamDisplay()" autocomplete="off">
+      oninput="updateTeamDisplay()" autocomplete="off" autocorrect="off" spellcheck="false">
   </div>
 
   <!-- SỐ GAME -->
-  <div class="section-header">
-    <div class="section-title">Số game bắn</div>
-  </div>
+  <div class="section-title">Số game bắn</div>
   <div class="pills" id="pills"></div>
 
   <!-- CÁC GAME -->
   <div class="games-grid" id="gamesGrid"></div>
 
   <!-- TỔNG KẾT -->
-  <div class="summary" id="summary">
+  <div class="summary">
     <div class="summary-title" id="summaryTitle">Tổng kết</div>
     <div class="stats-row" id="statsGrid"></div>
     <div class="total-block">
@@ -852,16 +690,16 @@ h1 {
       <div class="total-val" id="grandTotal">0</div>
     </div>
     <div class="btns-row">
-      <button class="btn-reset" onclick="resetAll()">↺ Reset</button>
-      <button class="btn-export" onclick="exportImage()">📸 Xuất ảnh khoe</button>
+      <button class="btn-reset" onclick="confirmReset()">↺ Reset</button>
+      <button class="btn-export" id="btnExport" onclick="exportImage()">📸 Xuất ảnh khoe</button>
     </div>
   </div>
 
 </div>
 
-<!-- EXPORT CARD (ẩn) -->
-<div id="exportCard" style="position:relative;">
-  <div class="ec-watermark" id="ec-watermark">XDORZY</div>
+<!-- EXPORT CARD (off-screen, dùng để chụp ảnh) -->
+<div id="exportCard" style="position:fixed;left:-9999px;top:0;">
+  <div class="ec-watermark" id="ec-watermark">FF SCORE</div>
   <div class="ec-header">
     <div>
       <div class="ec-logo">Free Fire Esports</div>
@@ -886,21 +724,27 @@ h1 {
   </div>
   <div class="ec-footer">
     <div id="ec-date">TOURNAMENT SCORECARD</div>
-    <div>XDORZY CUSTOM FF SYSTEM</div>
+    <div>FF SCORE SYSTEM</div>
   </div>
 </div>
 
-<!-- PREVIEW MODAL -->
+<!-- PREVIEW BOTTOM SHEET -->
 <div id="previewOverlay">
-  <div class="preview-box">
-    <div class="preview-header">
-      <div class="preview-title">👀 Xem trước ảnh</div>
-      <button class="preview-close" onclick="closePreview()">✕</button>
+  <div class="sheet" id="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div class="sheet-title">👀 Xem trước ảnh</div>
+      <button class="sheet-close" onclick="closePreview()">✕</button>
     </div>
-    <img id="previewImg" src="" alt="Preview">
-    <div class="preview-actions">
-      <button class="btn-cancel" onclick="closePreview()">Huỷ</button>
-      <button class="btn-dl" onclick="downloadImage()">⬇️ &nbsp;Tải xuống</button>
+    <div class="sheet-img-wrap">
+      <img id="previewImg" src="" alt="Preview">
+      <div class="ios-hint" id="iosHint">
+        📱 Trên iOS: giữ tay vào ảnh → chọn <strong>"Save to Photos"</strong> để lưu
+      </div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn-cancel-sheet" onclick="closePreview()">✕</button>
+      <button class="btn-dl" id="btnDl" onclick="downloadImage()">⬇️ &nbsp;Tải xuống</button>
     </div>
   </div>
 </div>
@@ -914,6 +758,14 @@ function placePts(top) {
   if (!top || top < 1 || top > 12) return 0;
   return PLACEMENT_PTS[top - 1];
 }
+
+// ── Detect platform ──
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+const isAndroid = /Android/.test(navigator.userAgent);
+// Detect WebView (no Safari UI / no Chrome UI)
+const isWebView = isIOS
+  ? (!window.navigator.standalone && /AppleWebKit/.test(navigator.userAgent) && !/Safari\//.test(navigator.userAgent))
+  : isAndroid && /wv/.test(navigator.userAgent);
 
 let numGames = 3;
 let games = [];
@@ -956,14 +808,12 @@ function render() {
     card.id = `card-${idx}`;
 
     let opts = `<option value="">— Chọn hạng —</option>`;
-    opts += `<option value="1" ${g.top==1?'selected':''}>🏆 BOOYAH (Top 1) — +12đ</option>`;
+    opts += `<option value="1" ${g.top==1?'selected':''}>🏆 BOOYAH (Top 1) +12đ</option>`;
     for (let t = 2; t <= 12; t++) {
       opts += `<option value="${t}" ${g.top==t?'selected':''}>#${t}  +${PLACEMENT_PTS[t-1]}đ</option>`;
     }
 
-    let chipClass = 'score-chip';
-    if (isBooyah) chipClass += ' booyah';
-    else if (score > 0) chipClass += ' active';
+    let chipClass = 'score-chip' + (isBooyah ? ' booyah' : score > 0 ? ' active' : '');
 
     card.innerHTML = `
       <div class="card-top-row">
@@ -977,14 +827,13 @@ function render() {
           <div class="pts-hint">Vị trí: <span id="pp-${idx}">${g.top !== '' ? '+'+pp+'đ' : '—'}</span></div>
         </div>
         <div class="field-wrap">
-          <label>Elims (mạng)</label>
-          <div class="elim-wrap" id="elim-wrap-${idx}">
-            <button class="elim-btn" onclick="changeElim(${idx}, -1)">−</button>
+          <label>Elims</label>
+          <div class="elim-wrap">
+            <button class="elim-btn" onclick="changeElim(${idx}, -1)" type="button">−</button>
             <input class="elim-val" type="number" min="0" max="99"
-              id="elim-${idx}"
-              value="${elims}"
-              oninput="setElims(${idx}, this.value)">
-            <button class="elim-btn" onclick="changeElim(${idx}, +1)">+</button>
+              id="elim-${idx}" value="${elims}"
+              oninput="setElims(${idx}, this.value)" inputmode="numeric">
+            <button class="elim-btn" onclick="changeElim(${idx}, +1)" type="button">+</button>
           </div>
         </div>
       </div>`;
@@ -997,25 +846,19 @@ function render() {
 
 function setTop(idx, val) {
   games[idx].top = val === '' ? '' : Number(val);
-  updateCard(idx);
-  updateSummary();
-  saveState();
+  updateCard(idx); updateSummary(); saveState();
 }
 
 function setElims(idx, val) {
   games[idx].elims = Math.max(0, Number(val) || 0);
-  updateCard(idx);
-  updateSummary();
-  saveState();
+  updateCard(idx); updateSummary(); saveState();
 }
 
 function changeElim(idx, delta) {
   games[idx].elims = Math.max(0, (Number(games[idx].elims) || 0) + delta);
   const input = document.getElementById(`elim-${idx}`);
   if (input) input.value = games[idx].elims;
-  updateCard(idx);
-  updateSummary();
-  saveState();
+  updateCard(idx); updateSummary(); saveState();
 }
 
 function updateCard(idx) {
@@ -1027,21 +870,15 @@ function updateCard(idx) {
   const filled = g.top !== '' || elims > 0;
 
   const badge = document.getElementById(`badge-${idx}`);
-  const ppEl = document.getElementById(`pp-${idx}`);
-  const card = document.getElementById(`card-${idx}`);
+  const ppEl  = document.getElementById(`pp-${idx}`);
+  const card  = document.getElementById(`card-${idx}`);
 
   if (badge) {
-    let chipClass = 'score-chip';
-    if (isBooyah) chipClass += ' booyah';
-    else if (score > 0) chipClass += ' active';
-    badge.className = chipClass;
+    badge.className = 'score-chip' + (isBooyah ? ' booyah' : score > 0 ? ' active' : '');
     badge.textContent = score > 0 ? score + 'đ' : '—';
   }
   if (ppEl) ppEl.textContent = g.top !== '' ? '+' + pp + 'đ' : '—';
-  if (card) {
-    card.className = 'game-card' + (filled ? ' filled' : '') + (isBooyah ? ' booyah-card' : '');
-  }
-
+  if (card) card.className = 'game-card' + (filled ? ' filled' : '') + (isBooyah ? ' booyah-card' : '');
   if (isBooyah && card) {
     card.classList.remove('booyah-flash');
     void card.offsetWidth;
@@ -1059,15 +896,19 @@ function updateSummary() {
   const grand = totalPlace + totalElims;
 
   document.getElementById('statsGrid').innerHTML = `
-    <div class="stat-box"><div class="stat-val">${games.length}</div><div class="stat-lbl">Số game</div></div>
     <div class="stat-box"><div class="stat-val">${totalElims}</div><div class="stat-lbl">Tổng Elims</div></div>
     <div class="stat-box"><div class="stat-val">${totalPlace}</div><div class="stat-lbl">Điểm vị trí</div></div>
+    <div class="stat-box"><div class="stat-val">${games.length}</div><div class="stat-lbl">Số game</div></div>
     <div class="stat-box"><div class="stat-val">${booyahs} 🏆</div><div class="stat-lbl">BOOYAH</div></div>
   `;
   document.getElementById('grandTotal').textContent = grand;
 }
 
-function resetAll() {
+function confirmReset() {
+  if (games.every(g => g.top === '' && !g.elims)) { doReset(); return; }
+  if (confirm('Reset toàn bộ dữ liệu?')) doReset();
+}
+function doReset() {
   games = Array.from({length: numGames}, () => ({top: '', elims: 0}));
   localStorage.removeItem('ff_state');
   render();
@@ -1082,7 +923,6 @@ function saveState() {
     }));
   } catch(e) {}
 }
-
 function loadState() {
   try {
     const raw = localStorage.getItem('ff_state');
@@ -1099,62 +939,59 @@ function loadState() {
 }
 
 document.getElementById('teamName').addEventListener('input', saveState);
+const _orig = initGames;
+initGames = function(n) { _orig(n); saveState(); };
 
-// Auto-save khi đổi data
-const _origInitGames = initGames;
-initGames = function(n) { _origInitGames(n); saveState(); };
-
-// Boot: load saved hoặc khởi tạo mới
-if (loadState()) {
-  render();
-} else {
-  initGames(numGames);
-}
+if (loadState()) render();
+else initGames(numGames);
 
 // ── EXPORT ──
 let _cachedDataUrl = null;
 
-function exportImage() {
+function buildExportCard() {
   let totalElims = 0, totalPlace = 0, booyahs = 0;
   games.forEach(g => {
     const pp = g.top !== '' ? placePts(Number(g.top)) : 0;
-    totalPlace += pp;
-    totalElims += Number(g.elims) || 0;
+    totalPlace += pp; totalElims += Number(g.elims) || 0;
     if (g.top == 1) booyahs++;
   });
   const grand = totalPlace + totalElims;
+  const teamName = document.getElementById('teamName').value.trim() || 'FF TEAM';
 
-  const teamName = document.getElementById('teamName').value.trim() || 'XDORZY';
   document.getElementById('ec-watermark').textContent = teamName;
   document.getElementById('ec-team').textContent = teamName;
   document.getElementById('ec-date').textContent = 'DATE: ' + new Date().toLocaleDateString('vi-VN');
 
+  const cols = games.length <= 5 ? games.length : 5;
+  document.getElementById('ec-games').style.gridTemplateColumns = `repeat(${cols}, minmax(0,1fr))`;
   document.getElementById('ec-games').innerHTML = games.map((g, i) => {
     const pp = g.top !== '' ? placePts(Number(g.top)) : 0;
     const elims = Number(g.elims) || 0;
     const score = pp + elims;
     const isBooyah = g.top == 1;
     const topLabel = isBooyah ? 'BOOYAH' : g.top !== '' ? `#${g.top}` : '—';
-    return `
-      <div class="ec-game ${isBooyah ? 'booyah' : ''}">
-        <div class="ec-game-num">MATCH ${i+1}</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-          <div class="ec-game-top ${isBooyah ? 'bt' : ''}">${topLabel}</div>
-          <div class="ec-game-elims">${elims} KILLS</div>
-        </div>
-        <div class="ec-game-score">+${score} PTS</div>
-      </div>`;
+    return `<div class="ec-game ${isBooyah ? 'booyah' : ''}">
+      <div class="ec-game-num">MATCH ${i+1}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+        <div class="ec-game-top ${isBooyah ? 'bt' : ''}">${topLabel}</div>
+        <div class="ec-game-elims">${elims} KILLS</div>
+      </div>
+      <div class="ec-game-score">+${score} PTS</div>
+    </div>`;
   }).join('');
 
   document.getElementById('ec-stats').innerHTML = `
     <div class="ec-stat"><div class="ec-stat-val">${games.length}</div><div class="ec-stat-lbl">MATCHES</div></div>
-    <div class="ec-stat"><div class="ec-stat-val">${totalElims}</div><div class="ec-stat-lbl">TOTAL KILLS</div></div>
+    <div class="ec-stat"><div class="ec-stat-val">${totalElims}</div><div class="ec-stat-lbl">KILLS</div></div>
     <div class="ec-stat"><div class="ec-stat-val">${totalPlace}</div><div class="ec-stat-lbl">PLACE PTS</div></div>
     <div class="ec-stat"><div class="ec-stat-val">${booyahs}</div><div class="ec-stat-lbl">BOOYAHS</div></div>
   `;
   document.getElementById('ec-total-val').textContent = grand;
+}
 
-  const btn = document.querySelector('.btn-export');
+function exportImage() {
+  buildExportCard();
+  const btn = document.getElementById('btnExport');
   btn.textContent = '⏳ Đang xử lý...';
   btn.disabled = true;
 
@@ -1164,14 +1001,26 @@ function exportImage() {
     }).then(canvas => {
       _cachedDataUrl = canvas.toDataURL('image/png');
       document.getElementById('previewImg').src = _cachedDataUrl;
+
+      // Show iOS hint if on iOS
+      document.getElementById('iosHint').style.display = isIOS ? 'block' : 'none';
+      // Hide download button on iOS WebView (can't trigger save programmatically)
+      const dlBtn = document.getElementById('btnDl');
+      if (isIOS) {
+        dlBtn.textContent = '📤 Chia sẻ / Lưu ảnh';
+      } else {
+        dlBtn.innerHTML = '⬇️ &nbsp;Tải xuống';
+      }
+
       document.getElementById('previewOverlay').classList.add('open');
       btn.innerHTML = '📸 Xuất ảnh khoe';
       btn.disabled = false;
     }).catch(() => {
       btn.innerHTML = '📸 Xuất ảnh khoe';
       btn.disabled = false;
+      showToast('❌ Lỗi, thử lại nhé!');
     });
-  }, 100);
+  }, 120);
 }
 
 function closePreview() {
@@ -1180,20 +1029,59 @@ function closePreview() {
 
 function downloadImage() {
   if (!_cachedDataUrl) return;
+
+  // iOS: try Web Share API first (works in Safari & most WebViews)
+  if (isIOS && navigator.share) {
+    fetch(_cachedDataUrl)
+      .then(r => r.blob())
+      .then(blob => {
+        const file = new File([blob], `ff-score-${Date.now()}.png`, { type: 'image/png' });
+        return navigator.share({ files: [file], title: 'FF Score' });
+      })
+      .then(() => { closePreview(); showToast('✅ Đã chia sẻ!'); })
+      .catch(() => showToast('📱 Giữ tay vào ảnh để lưu nhé!'));
+    return;
+  }
+
+  // Android WebView bridge (nếu app native expose hàm này)
+  if (isAndroid && window.Android && window.Android.saveImage) {
+    window.Android.saveImage(_cachedDataUrl);
+    closePreview(); showToast('✅ Đã lưu ảnh!');
+    return;
+  }
+
+  // Standard browser download
   const link = document.createElement('a');
   link.download = `ff-score-${Date.now()}.png`;
   link.href = _cachedDataUrl;
+  document.body.appendChild(link);
   link.click();
+  document.body.removeChild(link);
   closePreview();
-  const toast = document.getElementById('toast');
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2500);
+  showToast('✅ Đã lưu ảnh!');
 }
 
-// Close overlay khi click nền
-document.getElementById('previewOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closePreview();
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Swipe down để đóng sheet
+let sheetStartY = 0;
+document.getElementById('sheet').addEventListener('touchstart', e => {
+  sheetStartY = e.touches[0].clientY;
+}, { passive: true });
+document.getElementById('sheet').addEventListener('touchend', e => {
+  const dy = e.changedTouches[0].clientY - sheetStartY;
+  if (dy > 80) closePreview();
+}, { passive: true });
+
+// Tap nền đóng
+document.getElementById('previewOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('previewOverlay')) closePreview();
 });
 </script>
 </body>
-      </html>
+</html>
