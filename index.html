@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FF Tính Điểm - Custom FF</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Oswald:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Oswald:wght@700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root {
@@ -13,7 +13,8 @@
   --text: #e8eaf0; --muted: #6b7280; --light: #9ca3b8;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; min-height: 100vh; padding-bottom: 60px; }
+body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; min-height: 100vh; padding-bottom: 60px; overflow-x: hidden; }
+html { overflow-x: hidden; }
 
 /* HEADER */
 header { background: linear-gradient(180deg,#12141f 0%,var(--bg) 100%); border-bottom: 1px solid var(--border); padding: 20px 16px 16px; text-align: center; }
@@ -25,11 +26,13 @@ h1 { font-family:'Oswald',sans-serif;font-size:clamp(36px,8vw,56px);letter-spaci
 .container { max-width:860px;margin:0 auto;padding:20px 14px; }
 .section-title { font-size:12px;font-weight:800;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px; }
 
-/* PILLS */
+/* PILLS & MAPS */
 .pills { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px; }
 .pill { cursor:pointer;width:46px;height:46px;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Nunito',sans-serif;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center;transition:all .15s;user-select:none; }
 .pill:hover { border-color:var(--orange);color:var(--orange); }
 .pill.active { background:linear-gradient(135deg,var(--gold),var(--orange));border-color:transparent;color:#1a0d00;box-shadow:0 4px 14px rgba(255,124,32,0.35); }
+.map-select { padding: 8px 12px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--surface); color: var(--gold); font-family: 'Rajdhani', sans-serif; font-weight: 700; outline: none; cursor: pointer; text-transform: uppercase; font-size: 14px;}
+.map-select:focus { border-color: var(--orange); }
 
 /* TEAM TABS */
 .teams-bar { display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap; }
@@ -84,7 +87,6 @@ h1 { font-family:'Oswald',sans-serif;font-size:clamp(36px,8vw,56px);letter-spaci
 .summary::before { content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--orange)); }
 .summary-title { font-size:12px;font-weight:800;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:16px; }
 .stats-row { display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px; }
-@media(max-width:480px){.stats-row{grid-template-columns:repeat(2,1fr);}}
 .stat-box { background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;text-align:center; }
 .stat-val { font-family:'Oswald',sans-serif;font-size:34px;color:var(--text);line-height:1; }
 .stat-lbl { font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:2px; }
@@ -95,8 +97,6 @@ h1 { font-family:'Oswald',sans-serif;font-size:clamp(36px,8vw,56px);letter-spaci
 .btn-reset { flex:1;padding:12px;background:transparent;border:2px solid var(--border);border-radius:12px;color:var(--muted);font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;letter-spacing:1px;cursor:pointer;transition:all .15s; }
 .btn-reset:hover { border-color:var(--accent);color:var(--accent); }
 .btn-export { flex:2;padding:12px;background:linear-gradient(90deg,var(--gold),var(--orange));border:none;border-radius:12px;color:#1a0d00;font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;letter-spacing:1px;cursor:pointer;transition:opacity .15s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px; }
-.btn-export:hover { opacity:0.88; }
-.btn-export:active { transform:scale(0.98); }
 
 /* LEADERBOARD */
 .leaderboard { background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:20px;margin-bottom:24px; }
@@ -114,68 +114,81 @@ h1 { font-family:'Oswald',sans-serif;font-size:clamp(36px,8vw,56px);letter-spaci
 .lb-details { font-size:12px;color:var(--muted);font-weight:600;margin-top:2px; }
 .lb-score { font-family:'Oswald',sans-serif;font-size:28px;color:var(--gold);flex-shrink:0; }
 .lb-empty { text-align:center;color:var(--muted);font-size:14px;padding:20px; }
-.lb-active-dot { width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0; }
 .btn-export-standing { padding:8px 14px;background:transparent;border:2px solid var(--gold);border-radius:10px;color:var(--gold);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:all .15s;white-space:nowrap; }
 .btn-export-standing:hover { background:rgba(245,200,66,0.1); }
 
-/* EXPORT PICKER MODAL */
-#exportPicker { display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease; }
-#exportPicker.open { display:flex; }
-.picker-box { background:#12141f;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:24px;max-width:400px;width:100%;animation:slideUp .25s cubic-bezier(.34,1.56,.64,1); }
-.picker-title { font-size:13px;font-weight:800;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:20px;text-align:center; }
-.picker-options { display:flex;flex-direction:column;gap:10px;margin-bottom:16px; }
-.picker-btn { padding:16px;border-radius:14px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .2s;text-align:left;display:flex;align-items:center;gap:14px; }
-.picker-btn:hover { border-color:var(--gold);background:rgba(245,200,66,0.07); }
-.picker-btn .picker-icon { font-size:26px; }
-.picker-btn .picker-label { font-size:15px;font-weight:800;color:var(--text); }
-.picker-btn .picker-desc { font-size:11px;color:var(--muted);font-weight:600;margin-top:2px; }
-.picker-cancel { width:100%;padding:12px;background:transparent;border:2px solid var(--border);border-radius:12px;color:var(--muted);font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:all .15s; }
-.picker-cancel:hover { border-color:var(--accent);color:var(--accent); }
-
-/* OVERALL STANDING CARD */
+/* OVERALL STANDING CARD (CSS CHÁY HƠN) */
 #standingCard {
-  position:fixed;left:-9999px;top:0;width:680px;
-  background:linear-gradient(145deg,#08090f 0%,#0d0f1a 50%,#08090f 100%);
-  font-family:'Nunito',sans-serif;color:#eef2ff;overflow:hidden;padding:36px 40px 32px;
+  display:none;
+  position:relative;
+  width:1050px;
+  margin:40px auto;
+  /* Hiệu ứng lửa rực cháy bên dưới */
+  background: 
+    radial-gradient(ellipse at center bottom, rgba(255, 68, 0, 0.45) 0%, rgba(20, 5, 5, 0.9) 70%),
+    linear-gradient(180deg, #0f0a05 0%, #170905 100%);
+  font-family:'Rajdhani',sans-serif; /* Đổi font xịn */
+  color:#ffffff; overflow:hidden; padding:36px 40px 32px;
 }
-#standingCard::before { content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(245,200,66,0.08),transparent 60%);pointer-events:none; }
-.sc-header { position:relative;z-index:1;text-align:center;margin-bottom:28px; }
-.sc-badge { display:inline-block;font-size:10px;font-weight:800;letter-spacing:3px;color:#e0a23a;text-transform:uppercase;border:1px solid rgba(224,162,58,0.3);border-radius:20px;padding:4px 14px;margin-bottom:12px; }
-.sc-title { font-family:'Oswald',sans-serif;font-size:52px;color:#fff;letter-spacing:4px;line-height:0.9;text-transform:uppercase;text-shadow:0 0 40px rgba(245,200,66,0.2); }
-.sc-title span { background:linear-gradient(135deg,#f5c842,#ff7c20);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
-.sc-subtitle { font-size:11px;letter-spacing:3px;color:#6b7280;text-transform:uppercase;margin-top:8px; }
+#standingCard::before {
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,0.03),transparent 60%);
+  pointer-events:none;
+}
+/* Layout chia 2 bên: Trái Leaderboard - Phải Winners */
+.sc-layout-wrap { display: flex; gap: 24px; align-items: flex-start; }
+.sc-left-panel { flex: 1; }
+.sc-right-panel { width: 340px; display: flex; flex-direction: column; gap: 12px; }
+
+.sc-header { position:relative;z-index:1;text-align:center;margin-bottom:22px; }
+.sc-badge { display:inline-block;font-size:12px;font-weight:800;letter-spacing:3px;color:#f5c842;text-transform:uppercase;border:1px solid rgba(245,200,66,0.4);border-radius:20px;padding:4px 14px;margin-bottom:12px;background:rgba(245,200,66,0.08); font-family: 'Nunito', sans-serif;}
+.sc-title { font-family:'Oswald',sans-serif;font-size:52px;color:#fff;letter-spacing:4px;line-height:0.9;text-transform:uppercase;text-shadow:0 4px 24px rgba(0,0,0,0.8); }
+.sc-title span { color:#f5c842;-webkit-text-fill-color:#f5c842;background:none;font-weight:800; }
+.sc-subtitle { font-size:13px;letter-spacing:3px;color:#b0b0b0;text-transform:uppercase;margin-top:8px; font-weight: 600;}
+
 .sc-cols { position:relative;z-index:1;display:block;margin-bottom:20px; }
-.sc-col { background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:14px;overflow:hidden;margin-bottom:0; }
-.sc-col-header { display:grid;grid-template-columns:52px 1fr 50px 70px 70px 70px;gap:0;padding:10px 18px;background:rgba(245,200,66,0.08);border-bottom:1px solid rgba(245,200,66,0.15);font-size:9px;font-weight:800;letter-spacing:2px;color:#a0896a;text-transform:uppercase; }
+.sc-col { background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:14px; overflow:hidden; }
+.sc-col-header { display:grid;grid-template-columns:52px 1fr 60px 70px 90px 80px;gap:0;padding:12px 18px;background:rgba(255, 124, 32, 0.15);border-bottom:1px solid rgba(255,124,32,0.3);font-size:12px;font-weight:800;letter-spacing:2px;color:#f5c842;text-transform:uppercase; font-family: 'Nunito', sans-serif;}
 .sc-col-header span { text-align:center; }
 .sc-col-header span:nth-child(2) { text-align:left; }
-.sc-row { display:grid;grid-template-columns:52px 1fr 50px 70px 70px 70px;gap:0;padding:11px 18px;border-bottom:1px solid rgba(255,255,255,0.04);align-items:center;transition:background .15s; }
+
+.sc-row { display:grid;grid-template-columns:52px 1fr 60px 70px 90px 80px;gap:0;padding:10px 18px;border-bottom:1px solid rgba(255,255,255,0.05);align-items:center; position:relative; }
 .sc-row:last-child { border-bottom:none; }
-.sc-row.top1 { background:rgba(245,200,66,0.07); }
-.sc-row.top3 { background:rgba(205,127,50,0.04); }
-.sc-rank { font-family:'Oswald',sans-serif;font-size:18px;color:#4a5568;text-align:center; }
-.sc-row.top1 .sc-rank { color:var(--gold); }
-.sc-row.top3 .sc-rank { color:#cd7f32; }
-.sc-name { font-size:14px;font-weight:900;color:#e8eaf0;letter-spacing:0.5px;padding-left:2px; }
-.sc-booyah { font-family:'Oswald',sans-serif;font-size:15px;color:#e0a23a;text-align:center; }
-.sc-val { font-family:'Oswald',sans-serif;font-size:16px;color:#c5cde0;text-align:center; }
-.sc-val.place { color:#9ca3b8; }
-.sc-total { font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;text-align:center; }
-.sc-row.top1 .sc-total { background:linear-gradient(135deg,#f5c842,#ff7c20);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
-.sc-row:not(.top1) .sc-total { color:#df7b2a; }
-.sc-footer { position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:2px;color:#3a4060;text-transform:uppercase;font-weight:700; }
-.sc-footer-center { text-align:center;flex:1; }
-.lb-active-dot { width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0; }
+.sc-row.top1 { background:rgba(245, 200, 66, 0.1); border-left: 4px solid var(--gold);}
+.sc-row.top2 { background:rgba(255,255,255,0.03); }
 
-/* TOAST */
-.toast { position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#0a1a14;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;padding:12px 24px;border-radius:30px;z-index:9999;opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none; }
-.toast.show { opacity:1;transform:translateX(-50%) translateY(0); }
+.sc-rank { font-family:'Oswald',sans-serif;font-size:20px;color:#fff;text-align:center; }
+.sc-name { font-size:18px;font-weight:700;color:#ffffff;letter-spacing:1px;padding-left:4px; text-transform: uppercase; font-family: 'Oswald', sans-serif;}
+/* Highlight Booyah màu vàng, các thông số khác màu trắng */
+.sc-booyah { font-family:'Oswald',sans-serif;font-size:18px;color:#f5c842;text-align:center; font-weight: bold;}
+.sc-val { font-family:'Oswald',sans-serif;font-size:18px;color:#ffffff;text-align:center; font-weight: bold;}
+.sc-total { font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;text-align:center; color:#ffffff;}
+.sc-row.top1 .sc-total { color: #f5c842; }
 
-/* EXPORT CARD (off-screen) */
+.sc-footer { position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:2px;color:#8b92a8;text-transform:uppercase;font-weight:700; font-family: 'Nunito', sans-serif;}
+
+/* Match Winner Cards Right Panel */
+.mw-card { background: linear-gradient(135deg, rgba(30,30,30,0.8), rgba(15,15,15,0.9)); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 16px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center;}
+.mw-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:6px; background: linear-gradient(180deg, #f5c842, #ff7c20); }
+.mw-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.mw-game { font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 800; color: #fff; background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px; letter-spacing: 1px;}
+.mw-booyah-txt { font-family: 'Oswald', sans-serif; font-size: 16px; color: #f5c842; font-style: italic; letter-spacing: 1px;}
+.mw-team { font-family: 'Oswald', sans-serif; font-size: 26px; font-weight: 700; color: #fff; text-transform: uppercase; line-height: 1.1; margin-top: 4px;}
+.mw-map { font-family: 'Rajdhani', sans-serif; font-size: 14px; color: #aaa; text-transform: uppercase; font-weight: 700; letter-spacing: 2px; text-align: right; margin-top: 4px;}
+
+/* ═══ EXPORT CARD — INDIVIDUAL TEAM ═══ */
 #exportCard {
-  position:fixed;left:-9999px;top:0;width:860px;
-  background: radial-gradient(circle at 0% 0%,rgba(224,162,58,0.16),transparent 38%), radial-gradient(circle at 100% 100%,rgba(208,97,25,0.18),transparent 42%), linear-gradient(145deg,#07080d 0%,#0c0f17 40%,#090b12 100%);
-  border:1px solid rgba(255,255,255,0.1);border-radius:24px;font-family:'Nunito',sans-serif;color:#eef2ff;overflow:hidden;padding:34px 36px 30px;box-shadow:0 20px 50px rgba(0,0,0,0.45);
+  display:none;
+  position:relative;
+  width:860px;
+  margin:40px auto;
+  background:
+    radial-gradient(circle at 0% 0%,rgba(224,162,58,0.16),transparent 38%),
+    radial-gradient(circle at 100% 100%,rgba(208,97,25,0.18),transparent 42%),
+    linear-gradient(145deg,#07080d 0%,#0c0f17 40%,#090b12 100%);
+  border:1px solid rgba(255,255,255,0.1);border-radius:24px;
+  font-family:'Nunito',sans-serif;color:#eef2ff;overflow:hidden;
+  padding:34px 36px 30px;
 }
 #exportCard::before { content:'';position:absolute;inset:0;background:linear-gradient(transparent 97%,rgba(255,255,255,0.03) 100%),linear-gradient(90deg,transparent 97%,rgba(255,255,255,0.03) 100%);background-size:34px 34px;opacity:.18;pointer-events:none; }
 .ec-header { display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1;padding-bottom:20px;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.1); }
@@ -189,7 +202,8 @@ h1 { font-family:'Oswald',sans-serif;font-size:clamp(36px,8vw,56px);letter-spaci
 .ec-games { position:relative;z-index:1;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:18px; }
 .ec-game { background:linear-gradient(150deg,rgba(18,22,34,0.85),rgba(13,16,25,0.9));border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:10px 11px;min-height:108px;display:flex;flex-direction:column;justify-content:space-between; }
 .ec-game.booyah { border-color:rgba(245,200,66,0.52);background:linear-gradient(150deg,rgba(56,44,20,0.55),rgba(23,21,16,0.92)); }
-.ec-game-num { font-size:10px;letter-spacing:2px;color:#95a0b9;text-transform:uppercase;margin-bottom:6px; }
+.ec-game-num { font-size:10px;letter-spacing:2px;color:#95a0b9;text-transform:uppercase;margin-bottom:1px; }
+.ec-game-map { font-size:9px;font-weight:700;color:#ff8040;letter-spacing:1px;text-transform:uppercase;font-family:'Rajdhani',sans-serif;margin-bottom:4px; }
 .ec-game-top { font-family:'Oswald',sans-serif;font-size:24px;color:#f7f9ff;line-height:1; }
 .ec-game-top.bt { color:#f8cf66; }
 .ec-game-elims { font-size:12px;color:#a8b1c8;font-weight:700; }
@@ -206,57 +220,62 @@ h1 { font-family:'Oswald',sans-serif;font-size:clamp(36px,8vw,56px);letter-spaci
 .ec-footer { position:relative;z-index:1;display:flex;justify-content:space-between;margin-top:14px;font-size:10px;letter-spacing:2px;color:#8f9bb8;text-transform:uppercase;font-weight:700; }
 .ec-watermark { position:absolute;top:50%;left:52%;transform:translate(-50%,-50%) rotate(-12deg);font-family:'Oswald',sans-serif;font-size:166px;color:rgba(255,255,255,0.02);white-space:nowrap;z-index:0;pointer-events:none;letter-spacing:9px; }
 
-/* PREVIEW MODAL */
-#previewOverlay { display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease; }
-#previewOverlay.open { display:flex;flex-direction:column;gap:16px; }
-@keyframes fadeIn { from{opacity:0}to{opacity:1} }
-.preview-box { background:#12141f;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:16px;max-width:700px;width:100%;max-height:80vh;overflow-y:auto;display:flex;flex-direction:column;gap:14px;animation:slideUp .25s cubic-bezier(.34,1.56,.64,1); }
-@keyframes slideUp { from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1} }
+/* ═══ MODALS ═══ */
+#exportPicker, #previewOverlay { display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px; }
+#exportPicker.open, #previewOverlay.open { display:flex; }
+/* Picker */
+.picker-box { background:#12141f;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:24px;max-width:400px;width:100%; }
+.picker-title { font-size:13px;font-weight:800;letter-spacing:2px;color:#6b7280;text-transform:uppercase;margin-bottom:18px;text-align:center; }
+.picker-options { display:flex;flex-direction:column;gap:10px;margin-bottom:14px; }
+.picker-btn { padding:16px;border-radius:14px;border:2px solid #2e3347;background:#1a1d27;color:#e8eaf0;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .2s;text-align:left;display:flex;align-items:center;gap:14px; }
+.picker-btn:hover { border-color:#f5c842;background:rgba(245,200,66,0.07); }
+.picker-btn .picker-icon { font-size:26px;flex-shrink:0; }
+.picker-btn .picker-label { font-size:15px;font-weight:800;color:#e8eaf0;display:block; }
+.picker-btn .picker-desc { font-size:11px;color:#6b7280;font-weight:600;margin-top:2px;display:block; }
+.picker-cancel { width:100%;padding:12px;background:transparent;border:2px solid #2e3347;border-radius:12px;color:#6b7280;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:all .15s; }
+.picker-cancel:hover { border-color:#ff4d6d;color:#ff4d6d; }
+/* Preview */
+.preview-box { background:#12141f;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:16px;max-width:700px;width:100%;max-height:88vh;overflow-y:auto;display:flex;flex-direction:column;gap:14px; }
 .preview-header { display:flex;align-items:center;justify-content:space-between; }
 .preview-title { font-size:13px;font-weight:800;letter-spacing:2px;color:#6b7280;text-transform:uppercase; }
-.preview-close { width:32px;height:32px;border-radius:50%;border:1.5px solid #2e3347;background:transparent;color:#6b7280;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1; }
+.preview-close { width:32px;height:32px;border-radius:50%;border:1.5px solid #2e3347;background:transparent;color:#6b7280;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1; }
 .preview-close:hover { border-color:#ff4d6d;color:#ff4d6d; }
-#previewImg { width:100%;border-radius:12px;display:block;border:1px solid rgba(255,255,255,0.07); }
+#previewImg { width:100%;border-radius:12px;border:1px solid rgba(255,255,255,0.07); }
 .preview-actions { display:flex;gap:10px; }
-.btn-dl { flex:1;padding:14px;background:linear-gradient(90deg,#f5c842,#ff7c20);border:none;border-radius:12px;color:#1a0d00;font-family:'Nunito',sans-serif;font-size:16px;font-weight:900;letter-spacing:1px;cursor:pointer;transition:opacity .15s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px; }
-.btn-dl:hover { opacity:0.88; }
-.btn-dl:active { transform:scale(0.98); }
-.btn-cancel { padding:14px 20px;background:transparent;border:2px solid #2e3347;border-radius:12px;color:#6b7280;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .15s; }
+.btn-dl { flex:1;padding:14px;background:linear-gradient(90deg,#f5c842,#ff7c20);border:none;border-radius:12px;color:#1a0d00;font-family:'Nunito',sans-serif;font-size:16px;font-weight:900;cursor:pointer; }
+.btn-cancel { padding:14px 20px;background:transparent;border:2px solid #2e3347;border-radius:12px;color:#6b7280;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer; }
 .btn-cancel:hover { border-color:#ff4d6d;color:#ff4d6d; }
+/* Toast */
+.toast { position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:#2dd4a3;color:#0a1a14;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;padding:12px 24px;border-radius:30px;z-index:9999;opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none; }
+.toast.show { opacity:1;transform:translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="header-badge">⚡ Free Fire · Esports</div>
+  <div class="header-badge">⚡ XDORZY · SYSTEM</div>
   <h1>Tính Điểm Giải</h1>
   <div class="header-sub">1 Elims = 1 điểm &nbsp;·&nbsp; Top 1 = 12 điểm</div>
 </header>
 
 <div class="container">
 
-  <!-- SỐ GAME -->
   <div class="section-title">Số game bắn</div>
   <div class="pills" id="pills"></div>
+  
+  <div class="section-title" style="margin-top: 10px;">Cài đặt Bản đồ từng Game</div>
+  <div class="pills" id="mapSelects" style="gap:10px;"></div>
 
-  <!-- TEAM TABS -->
-  <div class="section-title">Các đội</div>
+  <div class="section-title" style="margin-top: 10px;">Các đội</div>
   <div class="teams-bar" id="teamsBar"></div>
 
-  <!-- TEAM INPUT -->
   <div class="team-card">
-    <div class="team-icon-wrap">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="rgba(245,200,66,0.25)" stroke="#f5c842" stroke-width="1.8" stroke-linejoin="round"/>
-      </svg>
-    </div>
+    <div class="team-icon-wrap"><img src="meizuxp.png" style="width: 65px; height: 60px;"></div>
     <input type="text" id="teamName" maxlength="30" placeholder="Tên đội..." oninput="onTeamNameInput()" autocomplete="off">
   </div>
 
-  <!-- GAME CARDS -->
   <div class="games-grid" id="gamesGrid"></div>
 
-  <!-- SUMMARY -->
   <div class="summary">
     <div class="summary-title" id="summaryTitle">Tổng kết</div>
     <div class="stats-row" id="statsGrid"></div>
@@ -270,7 +289,6 @@ h1 { font-family:'Oswald',sans-serif;font-size:clamp(36px,8vw,56px);letter-spaci
     </div>
   </div>
 
-  <!-- LEADERBOARD -->
   <div class="leaderboard">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
       <div class="lb-title" style="margin-bottom:0;">🏆 Bảng xếp hạng</div>
@@ -281,18 +299,12 @@ h1 { font-family:'Oswald',sans-serif;font-size:clamp(36px,8vw,56px);letter-spaci
 
 </div>
 
-<!-- EXPORT CARD (hidden) -->
-<div id="exportCard" style="position:relative;">
+<!-- EXPORT CARD — INDIVIDUAL TEAM -->
+<div id="exportCard">
   <div class="ec-watermark" id="ec-watermark">FF</div>
   <div class="ec-header">
-    <div>
-      <div class="ec-logo">Free Fire Esports</div>
-      <div class="ec-title">MATCH RESULTS</div>
-    </div>
-    <div class="ec-team-wrap">
-      <div class="ec-team-label">TEAM</div>
-      <div class="ec-team" id="ec-team">—</div>
-    </div>
+    <div><div class="ec-logo">XDORZY SYSTEM CUSTOM FF</div><div class="ec-title">MATCH RESULTS</div></div>
+    <div class="ec-team-wrap"><div class="ec-team-label">TEAM</div><div class="ec-team" id="ec-team">—</div></div>
   </div>
   <div class="ec-meta">
     <div class="ec-pill">1 ELIMS = 1 PTS</div>
@@ -302,27 +314,24 @@ h1 { font-family:'Oswald',sans-serif;font-size:clamp(36px,8vw,56px);letter-spaci
   <div class="ec-games" id="ec-games"></div>
   <div class="ec-summary-box">
     <div class="ec-stats-wrapper" id="ec-stats"></div>
-    <div class="ec-total">
-      <div class="ec-total-label">Grand Total</div>
-      <div class="ec-total-val" id="ec-total-val">0</div>
-    </div>
+    <div class="ec-total"><div class="ec-total-label">Grand Total</div><div class="ec-total-val" id="ec-total-val">0</div></div>
   </div>
-  <div class="ec-footer">
-    <div id="ec-date">TOURNAMENT SCORECARD</div>
-    <div>XDORZY CUSTOM FF SYSTEM</div>
-  </div>
+  <div class="ec-footer"><div id="ec-date">TOURNAMENT SCORECARD</div><div>XDORZY CUSTOM FF SYSTEM</div></div>
 </div>
 
-<!-- OVERALL STANDING CARD (hidden) -->
-<div id="standingCard" style="position:relative;">
+<!-- OVERALL STANDING CARD -->
+<div id="standingCard">
   <div class="sc-header">
-    <div class="sc-badge">⚡ Free Fire Esports</div>
+    <div class="sc-badge">⚡ XDORZY CUSTOM SYSTEM FF</div>
     <div class="sc-title">OVERALL <span>STANDING</span></div>
     <div class="sc-subtitle" id="sc-subtitle">Tournament Scorecard</div>
   </div>
-  <div class="sc-cols" id="sc-cols"></div>
-  <div class="sc-footer">
-    <div id="sc-date-left">1 ELIMS = 1 PTS · TOP 1 = 12 PTS</div>
+  <div class="sc-layout-wrap">
+    <div class="sc-left-panel"><div class="sc-cols" id="sc-cols"></div></div>
+    <div class="sc-right-panel" id="sc-right-matches"></div>
+  </div>
+  <div class="sc-footer" style="margin-top:20px;">
+    <div>1 ELIMS = 1 PTS · TOP 1 = 12 PTS</div>
     <div class="sc-footer-center" id="sc-date-center"></div>
     <div>XDORZY CUSTOM FF SYSTEM</div>
   </div>
@@ -333,13 +342,19 @@ h1 { font-family:'Oswald',sans-serif;font-size:clamp(36px,8vw,56px);letter-spaci
   <div class="picker-box">
     <div class="picker-title">📸 Chọn kiểu xuất ảnh</div>
     <div class="picker-options">
-      <button class="picker-btn" onclick="doExportTeam()">
+      <button class="picker-btn" onclick="closePicker();exportImage()">
         <div class="picker-icon">🎯</div>
-        <div><div class="picker-label">Điểm đội đang xem</div><div class="picker-desc">Chi tiết từng game của đội hiện tại</div></div>
+        <div>
+          <span class="picker-label">Điểm đội đang xem</span>
+          <span class="picker-desc">Chi tiết từng game của đội hiện tại</span>
+        </div>
       </button>
-      <button class="picker-btn" onclick="doExportStanding()">
+      <button class="picker-btn" onclick="closePicker();exportStanding()">
         <div class="picker-icon">📊</div>
-        <div><div class="picker-label">Bảng xếp hạng tổng</div><div class="picker-desc">Overall Standing tất cả các đội</div></div>
+        <div>
+          <span class="picker-label">Bảng xếp hạng tổng</span>
+          <span class="picker-desc">Overall Standing tất cả các đội</span>
+        </div>
       </button>
     </div>
     <button class="picker-cancel" onclick="closePicker()">Huỷ</button>
@@ -365,39 +380,76 @@ h1 { font-family:'Oswald',sans-serif;font-size:clamp(36px,8vw,56px);letter-spaci
 
 <script>
 const PLACEMENT_PTS = [12,9,8,7,6,5,4,3,2,1,0,0];
+const MAP_LIST = ['Bermuda', 'Kalahari', 'Purgatory', 'Alpine', 'Nexterra'];
+
 function placePts(top) { if(!top||top<1||top>12)return 0; return PLACEMENT_PTS[top-1]; }
 
 let numGames = 3, currentTeam = 0, teams = [];
+let globalMaps = [];
 let _cachedDataUrl = null;
 
 function defaultGames() { return Array.from({length:numGames},()=>({top:'',elims:0})); }
 function teamTotal(t) { let s=0; t.games.forEach(g=>{s+=(g.top!==''?placePts(Number(g.top)):0)+(Number(g.elims)||0);}); return s; }
 
 // STORAGE
-function saveState() { try{localStorage.setItem('ff_v3',JSON.stringify({numGames,currentTeam,teams}));}catch(e){} }
+function saveState() { try{localStorage.setItem('ff_v5',JSON.stringify({numGames,currentTeam,teams,globalMaps}));}catch(e){} }
 function loadState() {
   try {
-    const raw=localStorage.getItem('ff_v3'); if(!raw)return false;
-    const s=JSON.parse(raw); numGames=s.numGames||3; currentTeam=s.currentTeam||0; teams=s.teams||[];
+    const raw=localStorage.getItem('ff_v5'); if(!raw)return false;
+    const s=JSON.parse(raw); numGames=s.numGames||3; currentTeam=s.currentTeam||0; teams=s.teams||[]; globalMaps=s.globalMaps||[];
     teams.forEach(t=>{while(t.games.length<numGames)t.games.push({top:'',elims:0});t.games=t.games.slice(0,numGames);});
+    while(globalMaps.length<numGames) globalMaps.push('Bermuda');
+    globalMaps = globalMaps.slice(0, numGames);
     return teams.length>0;
   } catch(e){return false;}
 }
 
 function init() {
-  if(!loadState()||teams.length===0){teams=[{name:'',games:defaultGames()}];currentTeam=0;}
+  if(!loadState()||teams.length===0){
+    teams=[{name:'',games:defaultGames()}];currentTeam=0;
+    globalMaps = Array(numGames).fill('Bermuda');
+  }
   render();
 }
 
-function render() { renderPills();renderTeamTabs();renderTeamInput();renderGames();updateSummary();renderLeaderboard(); }
+function render() { renderPills(); renderMapSelects(); renderTeamTabs(); renderTeamInput(); renderGames(); updateSummary(); renderLeaderboard(); }
 
 function renderPills() {
   const el=document.getElementById('pills'); el.innerHTML='';
   for(let i=1;i<=10;i++){
     const p=document.createElement('div');
     p.className='pill'+(i===numGames?' active':''); p.textContent=i;
-    p.onclick=()=>{numGames=i;teams.forEach(t=>{while(t.games.length<numGames)t.games.push({top:'',elims:0});t.games=t.games.slice(0,numGames);});saveState();render();};
+    p.onclick=()=>{
+      numGames=i;
+      while(globalMaps.length<numGames) globalMaps.push('Bermuda');
+      globalMaps = globalMaps.slice(0, numGames);
+      teams.forEach(t=>{while(t.games.length<numGames)t.games.push({top:'',elims:0});t.games=t.games.slice(0,numGames);});
+      saveState();render();
+    };
     el.appendChild(p);
+  }
+}
+
+function renderMapSelects() {
+  const el = document.getElementById('mapSelects'); el.innerHTML = '';
+  for(let i=0; i<numGames; i++) {
+    const wrap = document.createElement('div');
+    wrap.style.cssText='display:flex;flex-direction:column;gap:4px;';
+    const lbl = document.createElement('div');
+    lbl.style.cssText='font-size:9px;font-weight:800;letter-spacing:1.5px;color:#6b7280;text-transform:uppercase;';
+    lbl.textContent=`Game ${i+1}`;
+    const sel = document.createElement('select');
+    sel.className = 'map-select';
+    MAP_LIST.forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m; opt.textContent = m;
+      if(globalMaps[i] === m) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    sel.onchange = (e) => { globalMaps[i] = e.target.value; saveState(); renderGames(); };
+    wrap.appendChild(lbl);
+    wrap.appendChild(sel);
+    el.appendChild(wrap);
   }
 }
 
@@ -427,6 +479,7 @@ function renderGames() {
   t.games.forEach((g,idx)=>{
     const pp=g.top!==''?placePts(Number(g.top)):0; const elims=Number(g.elims)||0;
     const score=pp+elims; const isBooyah=g.top==1; const filled=g.top!==''||elims>0;
+    const mapName=globalMaps[idx]||'Bermuda';
     const card=document.createElement('div');
     card.className='game-card'+(filled?' filled':'')+(isBooyah?' booyah-card':''); card.id=`card-${idx}`;
     let opts=`<option value="">— Chọn hạng —</option>`;
@@ -435,14 +488,15 @@ function renderGames() {
     let chipClass='score-chip'+(isBooyah?' booyah':score>0?' active':'');
     card.innerHTML=`
       <div class="card-top-row">
-        <div class="game-label">Game ${idx+1}</div>
+        <div>
+          <div class="game-label">Game ${idx+1} <span style="font-size:9px;color:#ff8040;font-weight:700;text-transform:uppercase;">· ${mapName}</span></div>
+        </div>
         <div class="${chipClass}" id="badge-${idx}">${score>0?score+'đ':'—'}</div>
       </div>
       <div class="fields-row">
         <div class="field-wrap">
           <label>Hạng</label>
           <select onchange="setTop(${idx},this.value)">${opts}</select>
-          <div class="pts-hint">Vị trí: <span id="pp-${idx}">${g.top!==''?'+'+pp+'đ':'—'}</span></div>
         </div>
         <div class="field-wrap">
           <label>Elims (mạng)</label>
@@ -457,173 +511,163 @@ function renderGames() {
   });
 }
 
-// TEAM ACTIONS
 function addTeam() { teams.push({name:'',games:defaultGames()}); currentTeam=teams.length-1; saveState();render(); }
 function removeTeam(e,i) { e.stopPropagation(); if(teams.length<=1)return; teams.splice(i,1); if(currentTeam>=teams.length)currentTeam=teams.length-1; saveState();render(); }
 function switchTeam(i) { currentTeam=i; saveState();render(); }
 function onTeamNameInput() { teams[currentTeam].name=document.getElementById('teamName').value; updateSummaryTitle();renderTeamTabs();renderLeaderboard();saveState(); }
 function updateSummaryTitle() { const name=teams[currentTeam].name.trim(); document.getElementById('summaryTitle').textContent=name?`⭐ ${name} — Tổng kết`:'Tổng kết'; }
-
-// GAME DATA
-function setTop(idx,val) { teams[currentTeam].games[idx].top=val===''?'':Number(val); updateCard(idx);updateSummary();renderTeamTabs();renderLeaderboard();saveState(); }
-function setElims(idx,val) { teams[currentTeam].games[idx].elims=Math.max(0,Number(val)||0); updateCard(idx);updateSummary();renderTeamTabs();renderLeaderboard();saveState(); }
-function changeElim(idx,delta) {
-  const g=teams[currentTeam].games[idx]; g.elims=Math.max(0,(Number(g.elims)||0)+delta);
-  const inp=document.getElementById(`elim-${idx}`); if(inp)inp.value=g.elims;
-  updateCard(idx);updateSummary();renderTeamTabs();renderLeaderboard();saveState();
-}
-
-function updateCard(idx) {
-  const g=teams[currentTeam].games[idx]; const pp=g.top!==''?placePts(Number(g.top)):0;
-  const elims=Number(g.elims)||0; const score=pp+elims; const isBooyah=g.top==1; const filled=g.top!==''||elims>0;
-  const badge=document.getElementById(`badge-${idx}`); const ppEl=document.getElementById(`pp-${idx}`); const card=document.getElementById(`card-${idx}`);
-  if(badge){badge.className='score-chip'+(isBooyah?' booyah':score>0?' active':'');badge.textContent=score>0?score+'đ':'—';}
-  if(ppEl)ppEl.textContent=g.top!==''?'+'+pp+'đ':'—';
-  if(card)card.className='game-card'+(filled?' filled':'')+(isBooyah?' booyah-card':'');
-  if(isBooyah&&card){card.classList.remove('booyah-flash');void card.offsetWidth;card.classList.add('booyah-flash');}
-}
+function setTop(idx,val) { teams[currentTeam].games[idx].top=val===''?'':Number(val); renderGames();updateSummary();renderTeamTabs();renderLeaderboard();saveState(); }
+function setElims(idx,val) { teams[currentTeam].games[idx].elims=Math.max(0,Number(val)||0); renderGames();updateSummary();renderTeamTabs();renderLeaderboard();saveState(); }
+function changeElim(idx,delta) { const g=teams[currentTeam].games[idx]; g.elims=Math.max(0,(Number(g.elims)||0)+delta); renderGames();updateSummary();renderTeamTabs();renderLeaderboard();saveState(); }
+function resetCurrentTeam() { teams[currentTeam].games=defaultGames(); saveState();renderGames();updateSummary();renderTeamTabs();renderLeaderboard(); }
 
 function updateSummary() {
   const t=teams[currentTeam]; let totalElims=0,totalPlace=0,booyahs=0;
   t.games.forEach(g=>{totalPlace+=g.top!==''?placePts(Number(g.top)):0;totalElims+=Number(g.elims)||0;if(g.top==1)booyahs++;});
-  const grand=totalPlace+totalElims;
   document.getElementById('statsGrid').innerHTML=`
     <div class="stat-box"><div class="stat-val">${t.games.length}</div><div class="stat-lbl">Số game</div></div>
     <div class="stat-box"><div class="stat-val">${totalElims}</div><div class="stat-lbl">Tổng Elims</div></div>
     <div class="stat-box"><div class="stat-val">${totalPlace}</div><div class="stat-lbl">Điểm vị trí</div></div>
     <div class="stat-box"><div class="stat-val">${booyahs} 🏆</div><div class="stat-lbl">BOOYAH</div></div>`;
-  document.getElementById('grandTotal').textContent=grand;
+  document.getElementById('grandTotal').textContent=totalPlace+totalElims;
 }
 
 function renderLeaderboard() {
   const lb=document.getElementById('leaderboard');
   const sorted=teams.map((t,i)=>({...t,idx:i,total:teamTotal(t)})).sort((a,b)=>b.total-a.total);
-  if(sorted.every(t=>t.total===0)){lb.innerHTML='<div class="lb-empty">Chưa có điểm — nhập data vào đi!</div>';return;}
+  if(sorted.every(t=>t.total===0)){lb.innerHTML='<div class="lb-empty" style="text-align:center;color:#6b7280;font-size:14px;padding:20px;">Chưa có điểm — nhập data vào đi!</div>';return;}
   lb.innerHTML=sorted.map((t,rank)=>{
-    const name=t.name.trim()||`Đội ${t.idx+1}`;
     const elims=t.games.reduce((s,g)=>s+(Number(g.elims)||0),0);
     const place=t.games.reduce((s,g)=>s+(g.top!==''?placePts(Number(g.top)):0),0);
     const booyahs=t.games.filter(g=>g.top==1).length;
-    const rankClass=rank===0?'rank1':rank===1?'rank2':rank===2?'rank3':'';
-    const medal=rank===0?'🥇':rank===1?'🥈':rank===2?'🥉':rank+1;
-    const isActive=t.idx===currentTeam;
-    return `<div class="lb-row ${rankClass}" onclick="switchTeam(${t.idx})">
-      <div class="lb-rank">${medal}</div>
-      <div style="flex:1"><div class="lb-name">${name}${isActive?' <span style="font-size:11px;color:var(--green);font-weight:700;">▶ đang xem</span>':''}</div><div class="lb-details">${elims} elims · ${place} vị trí${booyahs?' · '+booyahs+'🏆':''}</div></div>
+    return `<div class="lb-row ${rank===0?'rank1':rank===1?'rank2':rank===2?'rank3':''}" onclick="switchTeam(${t.idx})">
+      <div class="lb-rank">${rank===0?'🥇':rank===1?'🥈':rank===2?'🥉':rank+1}</div>
+      <div style="flex:1"><div class="lb-name">${t.name||'Đội '+(t.idx+1)}</div><div class="lb-details">${elims} elims · ${place} vị trí${booyahs?' · '+booyahs+'🏆':''}</div></div>
       <div class="lb-score">${t.total}đ</div>
     </div>`;
   }).join('');
 }
 
-function resetCurrentTeam() { teams[currentTeam].games=defaultGames(); saveState();renderGames();updateSummary();renderTeamTabs();renderLeaderboard(); }
+// ─── PICKER ───
+function showExportPicker() { document.getElementById('exportPicker').classList.add('open'); }
+function closePicker() { document.getElementById('exportPicker').classList.remove('open'); }
+document.addEventListener('click',function(e){ if(e.target.id==='exportPicker') closePicker(); if(e.target.id==='previewOverlay') closePreview(); });
 
-// EXPORT
+// ─── EXPORT TEAM CARD ───
 function exportImage() {
   const t=teams[currentTeam]; let totalElims=0,totalPlace=0,booyahs=0;
   t.games.forEach(g=>{const pp=g.top!==''?placePts(Number(g.top)):0;totalPlace+=pp;totalElims+=Number(g.elims)||0;if(g.top==1)booyahs++;});
   const grand=totalPlace+totalElims; const teamName=t.name.trim()||'TEAM';
-
   document.getElementById('ec-watermark').textContent=teamName;
   document.getElementById('ec-team').textContent=teamName;
   const dateStr=new Date().toLocaleDateString('vi-VN');
   document.getElementById('ec-date').textContent='DATE: '+dateStr;
   document.getElementById('ec-pill-date').textContent=dateStr;
-
   document.getElementById('ec-games').innerHTML=t.games.map((g,i)=>{
     const pp=g.top!==''?placePts(Number(g.top)):0; const elims=Number(g.elims)||0;
-    const score=pp+elims; const isBooyah=g.top==1; const topLabel=isBooyah?'BOOYAH':g.top!==''?`#${g.top}`:'—';
+    const score=pp+elims; const isBooyah=g.top==1;
+    const topLabel=isBooyah?'BOOYAH':g.top!==''?`#${g.top}`:'—';
+    const mapName=globalMaps[i]||'Bermuda';
     return `<div class="ec-game ${isBooyah?'booyah':''}">
-      <div class="ec-game-num">MATCH ${i+1}</div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+      <div><div class="ec-game-num">MATCH ${i+1}</div><div class="ec-game-map">${mapName}</div></div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;">
         <div class="ec-game-top ${isBooyah?'bt':''}">${topLabel}</div>
-        <div class="ec-game-elims">${elims} KILLS</div>
+        <div class="ec-game-elims">${elims} kills</div>
       </div>
-      <div class="ec-game-score">+${score} PTS</div>
+      <div class="ec-game-score">+${score}</div>
     </div>`;
   }).join('');
-
   document.getElementById('ec-stats').innerHTML=`
     <div class="ec-stat"><div class="ec-stat-val">${t.games.length}</div><div class="ec-stat-lbl">MATCHES</div></div>
     <div class="ec-stat"><div class="ec-stat-val">${totalElims}</div><div class="ec-stat-lbl">TOTAL KILLS</div></div>
     <div class="ec-stat"><div class="ec-stat-val">${totalPlace}</div><div class="ec-stat-lbl">PLACE PTS</div></div>
     <div class="ec-stat"><div class="ec-stat-val">${booyahs}</div><div class="ec-stat-lbl">BOOYAHS</div></div>`;
   document.getElementById('ec-total-val').textContent=grand;
-
-  const btn=document.querySelector('.btn-export'); btn.textContent='⏳ Đang xử lý...'; btn.disabled=true;
+  const btn=document.querySelector('.btn-export'); btn.innerHTML='⏳ Đang xử lý...'; btn.disabled=true;
+  const card=document.getElementById('exportCard');
+  card.style.display='block';
   setTimeout(()=>{
-    html2canvas(document.getElementById('exportCard'),{scale:2.5,backgroundColor:null,useCORS:true,logging:false}).then(canvas=>{
+    html2canvas(card,{scale:2.5,backgroundColor:'#07080d',useCORS:true,logging:false}).then(canvas=>{
+      card.style.display='none';
       _cachedDataUrl=canvas.toDataURL('image/png');
       document.getElementById('previewImg').src=_cachedDataUrl;
       document.getElementById('previewOverlay').classList.add('open');
-      btn.innerHTML='📸 Xuất ảnh khoe'; btn.disabled=false;
-    }).catch(()=>{btn.innerHTML='📸 Xuất ảnh khoe';btn.disabled=false;});
+      btn.innerHTML='📸 Xuất ảnh'; btn.disabled=false;
+    }).catch(()=>{card.style.display='none';btn.innerHTML='📸 Xuất ảnh';btn.disabled=false;});
   },100);
 }
 
-// PICKER
-function showExportPicker() { document.getElementById('exportPicker').classList.add('open'); }
-function closePicker() { document.getElementById('exportPicker').classList.remove('open'); }
-document.getElementById('exportPicker').addEventListener('click',function(e){if(e.target===this)closePicker();});
-function doExportTeam() { closePicker(); exportImage(); }
-function doExportStanding() { closePicker(); exportStanding(); }
+// ─── EXPORT STANDING ───
+function exportStanding() {
+  const sorted=teams.map((t,i)=>({...t,idx:i,total:teamTotal(t)})).sort((a,b)=>b.total-a.total);
+  if(sorted.every(t=>t.total===0)){alert('Nhập điểm vào đi ông giáo!');return;}
+  const dateStr=new Date().toLocaleDateString('vi-VN');
+  document.getElementById('sc-date-center').textContent='DATE: '+dateStr;
+  document.getElementById('sc-subtitle').textContent=sorted.length+' TEAMS · '+numGames+' MATCHES';
 
-// EXPORT TEAM
+  const header=`<div class="sc-col-header"><span>#</span><span>TEAM</span><span>BOOYAH</span><span>ELIMS</span><span>PLACE Pts</span><span>TOTAL</span></div>`;
+  const rows=sorted.map((t)=>{
+    const rank=sorted.indexOf(t)+1;
+    const name=t.name.trim()||'Team '+(t.idx+1);
+    const elims=t.games.reduce((s,g)=>s+(Number(g.elims)||0),0);
+    const place=t.games.reduce((s,g)=>s+(g.top!==''?placePts(Number(g.top)):0),0);
+    const booyahs=t.games.filter(g=>g.top==1).length;
+    const booyahMaps=t.games.map((g,i)=>g.top==1?(globalMaps[i]||`G${i+1}`):null).filter(Boolean);
+    const rankLabel=rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':rank;
+    const rowCls=rank===1?'top1':rank===2?'top2':'';
+    const booyahCell=booyahs>0
+      ?`<div style="text-align:center"><div class="sc-booyah">${booyahs}🏆</div></div>`
+      :`<div class="sc-booyah" style="color:#333">—</div>`;
+    return `<div class="sc-row ${rowCls}">
+      <div class="sc-rank">${rankLabel}</div>
+      <div class="sc-name">${name}</div>
+      ${booyahCell}
+      <div class="sc-val">${elims}</div>
+      <div class="sc-val">${place}</div>
+      <div class="sc-total">${t.total}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('sc-cols').innerHTML=`<div class="sc-col">${header}${rows}</div>`;
+
+  let winnersHtml='';
+  for(let i=0;i<numGames;i++){
+    const winner=teams.find(t=>t.games[i]&&t.games[i].top==1);
+    const teamName=winner?(winner.name.trim()||`TEAM ${winner.idx+1}`):'???';
+    const mapName=globalMaps[i]||'Bermuda';
+    winnersHtml+=`<div class="mw-card">
+      <div class="mw-header"><div class="mw-game">GAME ${i+1}</div><div class="mw-booyah-txt">BOOYAH!</div></div>
+      <div class="mw-team">${teamName}</div>
+      <div class="mw-map">${mapName}</div>
+    </div>`;
+  }
+  document.getElementById('sc-right-matches').innerHTML=winnersHtml;
+
+  const btn=document.querySelector('.btn-export-standing');
+  const origText=btn.textContent; btn.textContent='⏳ Xử lý...'; btn.disabled=true;
+  const scard=document.getElementById('standingCard');
+  scard.style.display='block';
+  setTimeout(()=>{
+    html2canvas(scard,{scale:2.5,backgroundColor:'#170905',useCORS:true,logging:false}).then(canvas=>{
+      scard.style.display='none';
+      _cachedDataUrl=canvas.toDataURL('image/png');
+      document.getElementById('previewImg').src=_cachedDataUrl;
+      document.getElementById('previewOverlay').classList.add('open');
+      btn.textContent=origText; btn.disabled=false;
+    }).catch(()=>{scard.style.display='none';btn.textContent=origText;btn.disabled=false;});
+  },200);
+}
+
 function closePreview() { document.getElementById('previewOverlay').classList.remove('open'); }
-
 function downloadImage() {
   if(!_cachedDataUrl)return;
   const link=document.createElement('a');
-  link.download=`ff-score-${Date.now()}.png`; link.href=_cachedDataUrl; link.click();
+  link.download=`ff-export-${Date.now()}.png`; link.href=_cachedDataUrl; link.click();
   closePreview();
   const toast=document.getElementById('toast'); toast.classList.add('show');
   setTimeout(()=>toast.classList.remove('show'),2500);
 }
 
-document.getElementById('previewOverlay').addEventListener('click',function(e){if(e.target===this)closePreview();});
-
-// EXPORT STANDING
-function exportStanding() {
-  const sorted = teams.map((t,i)=>({...t,idx:i,total:teamTotal(t)})).sort((a,b)=>b.total-a.total);
-  if(sorted.every(t=>t.total===0)){alert('Chưa có điểm nào để xuất!');return;}
-
-  const dateStr = new Date().toLocaleDateString('vi-VN');
-  document.getElementById('sc-date-center').textContent = 'DATE: ' + dateStr;
-  document.getElementById('sc-subtitle').textContent = sorted.length + ' đội · ' + numGames + ' game';
-
-  const colsEl = document.getElementById('sc-cols');
-  const header = `<div class="sc-col-header"><span>#</span><span>Đội</span><span>🏆</span><span>Elims</span><span>Vị trí</span><span>Tổng</span></div>`;
-  const rows = sorted.map((t) => {
-    const rank = sorted.indexOf(t) + 1;
-    const name = t.name.trim() || 'Đội '+(t.idx+1);
-    const elims = t.games.reduce((s,g)=>s+(Number(g.elims)||0),0);
-    const place = t.games.reduce((s,g)=>s+(g.top!==''?placePts(Number(g.top)):0),0);
-    const booyahs = t.games.filter(g=>g.top==1).length;
-    const rowClass = rank===1?'top1':rank<=3?'top3':'';
-    const rankLabel = rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':rank;
-    return `<div class="sc-row ${rowClass}">
-      <div class="sc-rank">${rankLabel}</div>
-      <div class="sc-name">${name}</div>
-      <div class="sc-booyah">${booyahs||'—'}</div>
-      <div class="sc-val">${elims}</div>
-      <div class="sc-val place">${place}</div>
-      <div class="sc-total">${t.total}</div>
-    </div>`;
-  }).join('');
-  colsEl.innerHTML = `<div class="sc-col">${header}${rows}</div>`;
-
-  const btn = document.querySelector('.btn-export-standing');
-  const origText = btn.textContent;
-  btn.textContent = '⏳ Đang xử lý...'; btn.disabled = true;
-
-  setTimeout(()=>{
-    html2canvas(document.getElementById('standingCard'),{scale:2.5,backgroundColor:'#08090f',useCORS:true,logging:false}).then(canvas=>{
-      _cachedDataUrl = canvas.toDataURL('image/png');
-      document.getElementById('previewImg').src = _cachedDataUrl;
-      document.getElementById('previewOverlay').classList.add('open');
-      btn.textContent = origText; btn.disabled = false;
-    }).catch(()=>{btn.textContent=origText;btn.disabled=false;});
-  },100);
-}
+function placePts(top) { if(!top||top<1||top>12)return 0; return PLACEMENT_PTS[top-1]; }
 
 init();
 </script>
