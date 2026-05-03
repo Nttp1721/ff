@@ -616,7 +616,7 @@ function exportStanding() {
     const rankLabel=rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':rank;
     const rowCls=rank===1?'top1':rank===2?'top2':'';
     const booyahCell=booyahs>0
-      ?`<div style="text-align:center"><div class="sc-booyah">${booyahs}🏆</div></div>`
+      ?`<div style="text-align:center"><div class="sc-booyah">${booyahs}</div></div>`
       :`<div class="sc-booyah" style="color:#333">—</div>`;
     return `<div class="sc-row ${rowCls}">
       <div class="sc-rank">${rankLabel}</div>
